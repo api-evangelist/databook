@@ -1,8 +1,13 @@
 aid: databook
 name: Databook
-description: 'Databook is a company surfaced as a portfolio company of bessemer-venture-partners, threshold-ventures
-  and added to the API Evangelist network as a stub for enrichment. Sector: vertical-software. This profile
-  is a lead awaiting the enrichment pipeline.'
+description: 'Databook is an AI-powered decision system for enterprise sales teams, combining verified
+  market intelligence with structured reasoning to give sellers visibility into their largest deals.
+  The platform pairs an "Outside-In Radar" of signals beyond the CRM with an advanced reasoning engine,
+  a dynamic Customer Context Graph modeling every buying group, guided sales agents tuned to specific
+  KPIs, a CRO dashboard for leadership, and a Value Coach for executive narratives. It serves enterprise
+  revenue organizations across cloud, cybersecurity, managed services, and software. Databook is a
+  portfolio company of Bessemer Venture Partners and Threshold Ventures; it publishes no public API
+  or developer program at this time.'
 url: https://raw.githubusercontent.com/api-evangelist/databook/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -11,12 +16,30 @@ x-backed-by:
 - threshold-ventures
 x-tier: stub
 x-tier-reason: portfolio-lead
+accessModel:
+  pricing: unknown
+  onboarding: approval
+  trial: false
+  try_now: false
+  public: false
+  label: Requires approval
+  confidence: medium
+  source: []
+  generated: '2026-07-22'
+  method: derived
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-18'
+image: https://storage.googleapis.com/gpt-engineer-file-uploads/rfjG12z2plW0k4X3iSgJgycEVfj1/social-images/social-1779217719891-Databook_Preview_Home.webp
 tags:
 - Company
 - Vertical Software
+- Sales Intelligence
+- Account Intelligence
+- Sales Enablement
+- Enterprise Sales
+- Artificial Intelligence
+- Revenue Operations
 apis: []
 maintainers:
 - FN: Kin Lane
@@ -25,4 +48,23 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://trydatabook.com/
+  url: https://databook.com/
+- type: Blog
+  url: https://databook.com/resources
+- type: Support
+  url: https://databook.com/contact
+- type: TermsOfService
+  url: https://databook.com/terms
+- type: PrivacyPolicy
+  url: https://databook.com/privacy
+- type: Login
+  url: https://chat.databook.com
+- type: TrustCenter
+  url: https://trust.databook.com/
+- type: DomainSecurity
+  url: security/databook-domain-security.yml
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence
