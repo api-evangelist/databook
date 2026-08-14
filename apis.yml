@@ -6,16 +6,19 @@ description: 'Databook is an AI-powered decision system for enterprise sales tea
   a dynamic Customer Context Graph modeling every buying group, guided sales agents tuned to specific
   KPIs, a CRO dashboard for leadership, and a Value Coach for executive narratives. It serves enterprise
   revenue organizations across cloud, cybersecurity, managed services, and software. Databook is a
-  portfolio company of Bessemer Venture Partners and Threshold Ventures; it publishes no public API
-  or developer program at this time.'
+  portfolio company of Bessemer Venture Partners and Threshold Ventures. It publishes a machine-readable
+  REST API — the DatabookAI REST API, OpenAPI 3.1.0 at https://api.databook.com/openapi.json — exposing
+  a catalog of 66 account-research insights, asynchronous CSV batch jobs that run those insights across
+  many target accounts, a threaded chat endpoint, and a deep-reasoning endpoint that returns cited,
+  structured analysis. Access is not self-serve: bearer tokens are provisioned by Databook support.'
 url: https://raw.githubusercontent.com/api-evangelist/databook/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - bessemer-venture-partners
 - threshold-ventures
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: enriched
+x-tier-reason: published-openapi
 accessModel:
   pricing: unknown
   onboarding: approval
@@ -23,13 +26,19 @@ accessModel:
   try_now: false
   public: false
   label: Requires approval
-  confidence: medium
-  source: []
-  generated: '2026-07-22'
+  confidence: high
+  source:
+  - authentication
+  - plans
+  generated: '2026-08-13'
   method: derived
+  note: >-
+    Confirmed by the provider's own API reference: "Access is provisioned by Databook support,
+    who issue the credentials your application uses to authenticate." No pricing page, no
+    self-serve signup, no free tier, no sandbox.
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-18'
+modified: '2026-08-13'
 image: https://storage.googleapis.com/gpt-engineer-file-uploads/rfjG12z2plW0k4X3iSgJgycEVfj1/social-images/social-1779217719891-Databook_Preview_Home.webp
 tags:
 - Company
@@ -40,7 +49,63 @@ tags:
 - Enterprise Sales
 - Artificial Intelligence
 - Revenue Operations
-apis: []
+- REST API
+- OpenAPI
+- Batch Processing
+- Agents
+- Reasoning
+- Company Data
+apis:
+- name: DatabookAI REST API
+  description: >-
+    REST API for integrating Databook's account intelligence into other applications. Eight
+    operations across four groups: an insight catalog (66 catalogued analytical questions about
+    a target company, each with a stable UUID), asynchronous batch jobs that run those insights
+    over a CSV of target accounts and return results as an S3 file, a threaded chat endpoint,
+    and a deep-reasoning endpoint that runs a named Databook agent and returns a response with
+    citations and metadata. Authentication is a bearer token issued by Databook support plus
+    databook-user-id and databook-tenant-id identity headers. Any single call is cut off at 180
+    seconds; longer work belongs on the batch endpoints. No webhooks, no pagination, no
+    idempotency keys.
+  humanURL: https://api.databook.com/redoc
+  baseURL: https://api.databook.com
+  tags:
+  - Sales Intelligence
+  - Account Intelligence
+  - Artificial Intelligence
+  - REST API
+  - OpenAPI
+  - Batch Processing
+  - Reasoning
+  properties:
+  - type: OpenAPI
+    url: openapi/databook-openapi-original.json
+  - type: OpenAPI
+    url: https://api.databook.com/openapi.json
+  - type: Documentation
+    url: https://api.databook.com/redoc
+  - type: APIReference
+    url: https://api.databook.com/redoc
+  - type: GettingStarted
+    url: https://api.databook.com/redoc#section/Getting-started
+  - type: Authentication
+    url: authentication/databook-authentication.yml
+  - type: Conventions
+    url: conventions/databook-conventions.yml
+  - type: ErrorCatalog
+    url: errors/databook-problem-types.yml
+  - type: DataModel
+    url: data-model/databook-data-model.yml
+  - type: RateLimits
+    url: rate-limits/databook-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/databook-lifecycle.yml
+  - type: Overlay
+    url: overlays/databook-openapi-overlay.yaml
+  - type: AgenticAccess
+    url: agentic-access/databook-agentic-access.yml
+  - type: AgentSkill
+    url: skills/_index.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -49,6 +114,14 @@ maintainers:
 common:
 - type: Website
   url: https://databook.com/
+- type: DeveloperPortal
+  url: https://api.databook.com/
+- type: Documentation
+  url: https://api.databook.com/redoc
+- type: APIReference
+  url: https://api.databook.com/redoc
+- type: GettingStarted
+  url: https://api.databook.com/redoc#section/Getting-started
 - type: Blog
   url: https://databook.com/resources
 - type: Support
@@ -59,12 +132,82 @@ common:
   url: https://databook.com/privacy
 - type: Login
   url: https://chat.databook.com
+- type: Security
+  url: https://databook.com/security
+- type: Compliance
+  url: https://databook.com/security
 - type: TrustCenter
   url: https://trust.databook.com/
+- type: VulnerabilityDisclosure
+  url: security/databook-vulnerability-disclosure.yml
 - type: DomainSecurity
   url: security/databook-domain-security.yml
+- type: Conformance
+  url: conformance/databook-conformance.yml
+- type: Authentication
+  url: authentication/databook-authentication.yml
+- type: Conventions
+  url: conventions/databook-conventions.yml
+- type: ErrorCatalog
+  url: errors/databook-problem-types.yml
+- type: DataModel
+  url: data-model/databook-data-model.yml
+- type: RateLimits
+  url: rate-limits/databook-rate-limits.yml
+- type: Plans
+  url: plans/databook-plans-pricing.yml
+- type: Lifecycle
+  url: lifecycle/databook-lifecycle.yml
+- type: AgenticAccess
+  url: agentic-access/databook-agentic-access.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/databook-llms.txt
+- type: Overlay
+  url: overlays/databook-openapi-overlay.yaml
+x-pointers-deliberately-omitted:
+  note: >-
+    Artifacts written this pass that record an ABSENCE, and therefore carry no common[] pointer.
+    A pointer asserts the provider serves the surface; these probes prove it does not.
+  omitted:
+  - type: MCPServer
+    artifact: mcp/databook-mcp.yml
+    reason: >-
+      Databook ships no MCP server. mcp/databook-mcp.yml is a DERIVED candidate tool list
+      (deployment.mode = none) mapped onto real operationIds. mcp.databook.com does not
+      resolve; /mcp, /sse and /v1/mcp all 404 on api.databook.com.
+  - type: WellKnown
+    artifact: well-known/databook-well-known.yml
+    reason: every /.well-known/ path returned 404 on both api.databook.com and databook.com
+  - type: SecurityTxt
+    reason: no RFC 9116 security.txt served on any host (404)
+  - type: SDKs
+    artifact: packages/databook-packages.yml
+    reason: no first-party client library exists in npm, PyPI or any other registry
+  - type: Packages
+    artifact: packages/databook-packages.yml
+    reason: package_count is 0 — the file records the absence
+  - type: StatusPage
+    reason: >-
+      status.databook.com exists but returns HTTP 403 behind Cloudflare Access — customers
+      only, not a page the public can read
+  - type: Deprecation
+    reason: no deprecation policy and no RFC 8594 Sunset/Deprecation header support
+  - type: Idempotency
+    reason: no idempotency key or retry-safety contract on any write operation
+  - type: AgentCard
+    reason: /.well-known/agent-card.json and /.well-known/agent.json 404 on every real host
+  - type: Pricing
+    reason: no pricing page exists; sitemap.xml has no /pricing and the motion is contact-sales
+  - type: ChangeLog
+    reason: no dated API changelog or release notes
+  - type: GitHubOrganization
+    reason: >-
+      github.com/databook exists but has 0 public repos and no attribution to DatabookAI;
+      ownership could not be established
 x-enrichment:
-  date: '2026-07-19'
-  status: backfilled
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 20
   pass: local-v1
-  note: backfilled from .gitignore signal + verified work evidence
