@@ -1,0 +1,72 @@
+generated: '2026-08-13'
+method: derived
+status: candidate
+source: openapi/databook-openapi-original.json
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: probed
+  note: >-
+    Databook ships NO MCP server. Probed mcp.databook.com (DNS does not resolve),
+    https://api.databook.com/mcp (404), /sse (404) and /v1/mcp (404); the API reference
+    single-page bundle at docs.prd.databook.io contains zero occurrences of "mcp",
+    "Model Context" or "agent-card"; and no @databook / databookai package exists on npm
+    or PyPI. The tools below are a DERIVED CANDIDATE mapped one-to-one onto real
+    operationIds in the published OpenAPI — nothing here is served by Databook.
+server:
+  name: databook
+  transport: null
+  url: null
+probes:
+- {url: 'https://api.databook.com/mcp', status: 404}
+- {url: 'https://api.databook.com/sse', status: 404}
+- {url: 'https://api.databook.com/v1/mcp', status: 404}
+- {url: 'https://mcp.databook.com/', status: 0, note: DNS does not resolve}
+- {url: 'https://api.databook.com/.well-known/oauth-authorization-server', status: 404}
+- {url: 'https://api.databook.com/.well-known/oauth-protected-resource', status: 404}
+auth_model:
+  scheme: http-bearer
+  note: >-
+    Any MCP server built over this API would carry a support-issued bearer token plus the
+    databook-user-id / databook-tenant-id identity headers — there is no OAuth surface to
+    delegate to, which is the main obstacle to a hosted, multi-tenant Databook MCP server.
+tools:
+- name: databook_create_batch_job
+  category: batch
+  description: "Create an asynchronous batch job by uploading a CSV of target companies and insight ids."
+  source_operation: openapi/databook-openapi-original.json#create_job_v1_batch_job_post
+- name: databook_list_batch_jobs
+  category: batch
+  description: "List the batch jobs belonging to the calling tenant."
+  source_operation: openapi/databook-openapi-original.json#list_job_v1_batch_job_get
+- name: databook_get_batch_job
+  category: batch
+  description: "Get a batch job's state, stop reason and timings by job id."
+  source_operation: openapi/databook-openapi-original.json#get_job_by_id_v1_batch_job__job_id__get
+- name: databook_get_batch_job_result
+  category: batch
+  description: "Get the result location (S3 URL) for a completed batch job."
+  source_operation: openapi/databook-openapi-original.json#get_job_result_by_id_v1_batch_job__job_id__result_get
+- name: databook_get_job_input_template
+  category: batch
+  description: "Get the URL of the CSV template describing the batch job input format."
+  source_operation: openapi/databook-openapi-original.json#get_job_input_csv_template_v1_batch_job_input_csv_template_get
+- name: databook_list_insights
+  category: insights
+  description: "List the catalogue of insights (id, name, version, description, category) available to the tenant."
+  source_operation: openapi/databook-openapi-original.json#list_insights_v1_insights_get
+- name: databook_chat
+  category: chat
+  description: "Ask Databook a question and receive the next message in a conversation thread."
+  source_operation: openapi/databook-openapi-original.json#chat_v1_chat_post
+- name: databook_run_reasoning
+  category: reasoning
+  description: "Run deep reasoning with a named Databook agent and a parameter set; returns response, citations and metadata."
+  source_operation: openapi/databook-openapi-original.json#run_reasoning_v1_reasoning_post
+coverage:
+  rest_operations: 8
+  candidate_tools: 8
+  operations_without_a_tool: 0

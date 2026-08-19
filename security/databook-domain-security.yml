@@ -1,4 +1,4 @@
-generated: '2026-07-18'
+generated: '2026-08-13'
 method: probed
 source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
 hosts:
@@ -8,6 +8,11 @@ hosts:
   cert_expires: Oct 15 21:39:46 2026 GMT
   hsts: true
   hsts_max_age: 31536000
+- host: api.databook.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Jan 27 23:59:59 2027 GMT
+  hsts: null
 domains:
 - domain: databook.com
   dnssec: true

@@ -1,0 +1,94 @@
+# Databook
+
+> Databook is an AI decision system for enterprise sales teams. Its REST API — the DatabookAI
+> REST API, OpenAPI 3.1.0, version 0.6.0 at https://api.databook.com — exposes four capability
+> groups over eight operations: a catalogue of 66 account-research insights, asynchronous CSV
+> batch jobs that run those insights across many target accounts, a threaded chat endpoint, and
+> a deep-reasoning endpoint that returns cited, structured analysis from a named agent.
+> Access is not self-serve: bearer tokens are provisioned by Databook support, and every call
+> also carries `databook-user-id` and `databook-tenant-id` identity headers.
+
+Generated: 2026-08-13
+Method: generated
+Source: https://api.databook.com/openapi.json (Databook publishes no llms.txt of its own —
+/llms.txt returns 404 on api.databook.com, databook.com and docs.prd.databook.io)
+
+## API
+
+- [DatabookAI REST API reference](https://api.databook.com/redoc): Redoc rendering of the
+  published OpenAPI. api.databook.com/ iframes the same docs from docs.prd.databook.io.
+- [OpenAPI 3.1.0 document](https://api.databook.com/openapi.json): the machine-readable
+  contract — 8 operations, 25 component schemas, base URL https://api.databook.com.
+
+## Operations
+
+- `POST /v1/batch/job` (`create_job_v1_batch_job_post`): create an asynchronous batch job by
+  uploading a CSV (multipart/form-data).
+- `GET /v1/batch/job` (`list_job_v1_batch_job_get`): list the tenant's batch jobs.
+- `GET /v1/batch/job/input-csv-template` (`get_job_input_csv_template_v1_batch_job_input_csv_template_get`):
+  URL of the CSV template that defines the batch input format.
+- `GET /v1/batch/job/{job_id}` (`get_job_by_id_v1_batch_job__job_id__get`): job state,
+  stop reason and timings.
+- `GET /v1/batch/job/{job_id}/result` (`get_job_result_by_id_v1_batch_job__job_id__result_get`):
+  the completed job's result as an S3 URL.
+- `GET /v1/insights` (`list_insights_v1_insights_get`): the insight catalogue — id, name,
+  version, description, category.
+- `POST /v1/chat` (`chat_v1_chat_post`): ask a question; returns `conversation_id` + `content`.
+- `POST /v1/reasoning` (`run_reasoning_v1_reasoning_post`): run a named agent; returns
+  `response`, `reference_id`, `citations`, `metadata`.
+
+## Runtime contract
+
+- Auth: `Authorization: Bearer <token>` (HTTPBearer), issued by Databook support. No OAuth,
+  no OIDC, no self-serve key, no scopes.
+- Required identity headers: `databook-user-id`, `databook-tenant-id`.
+- Errors: a custom envelope `{"error": {"type","message"}, "reference_id"}` — NOT RFC 9457.
+  Types: `invalid_request` (400), `invalid_authentication_error` (401),
+  `resource_not_found_error` (404), `rate_limit_error` (429), `internal_server_error` (500),
+  `server_side_overload_error` (503).
+- Rate limits: enforced but no number, scope, or header published. Exhaustion is 429; the
+  documented remedy is exponential backoff.
+- Timeout: 180 seconds per call, then 503. Long work belongs on the batch endpoints.
+- Idempotency: none. No idempotency key exists on any write operation.
+- Pagination: none. List operations return unbounded arrays.
+- Events: none. No webhooks, no callbacks, no AsyncAPI — batch completion is polled.
+
+## API Evangelist artifacts
+
+- [Authentication profile](authentication/databook-authentication.yml)
+- [API conventions](conventions/databook-conventions.yml)
+- [Error catalog](errors/databook-problem-types.yml)
+- [Data model](data-model/databook-data-model.yml)
+- [Rate limits](rate-limits/databook-rate-limits.yml)
+- [Lifecycle](lifecycle/databook-lifecycle.yml)
+- [Conformance](conformance/databook-conformance.yml)
+- [Agentic access contracts](agentic-access/databook-agentic-access.yml)
+- [Agent skills](skills/_index.yml)
+- [MCP candidate tool list](mcp/databook-mcp.yml) — derived; Databook ships no MCP server
+- [Packages](packages/databook-packages.yml) — no first-party SDK exists
+- [Well-known probe](well-known/databook-well-known.yml) — every path 404s
+- [Domain security](security/databook-domain-security.yml)
+- [Vulnerability disclosure](security/databook-vulnerability-disclosure.yml)
+- [Trust center](security/databook-trust-center.yml)
+- [OpenAPI overlay](overlays/databook-openapi-overlay.yaml)
+
+## Company
+
+- [Databook](https://databook.com/): the decision system for enterprise sales.
+- [Platform](https://databook.com/platform)
+- [Security](https://databook.com/security): SOC 2 Type 2, disclosure contact
+  security@databook.com.
+- [Trust center](https://trust.databook.com/)
+- [Resources / blog](https://databook.com/resources)
+- [Contact](https://databook.com/contact)
+- [Terms of service](https://databook.com/terms)
+- [Privacy policy](https://databook.com/privacy)
+- [Data processing addendum](https://databook.com/dpa)
+- [Subprocessors](https://databook.com/service-providers)
+
+## Not published
+
+Databook does not publish: an llms.txt, an A2A agent card, an MCP server, any /.well-known/
+document, a security.txt, an SDK in any package registry, a CLI, a public status page
+(status.databook.com is behind Cloudflare Access, HTTP 403), a changelog, a sandbox or test
+credentials, a public Postman collection, a pricing page, or a deprecation policy.

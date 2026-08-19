@@ -1,0 +1,66 @@
+generated: '2026-08-13'
+method: searched
+source: https://api.databook.com/openapi.json
+docs: https://api.databook.com/redoc
+format: custom-envelope
+note: >-
+  Databook does NOT use RFC 9457 application/problem+json. Every error response — on every
+  one of the 8 operations — is application/json carrying a single `error` object with a
+  machine-readable `type` and a human-readable `message`; some responses add a top-level
+  `reference_id` for support correlation. The status/type table below is published verbatim
+  in the API reference (info.description, "Errors" section) and is confirmed by the
+  components.schemas shapes in the spec.
+envelope:
+  shape: '{"error": {"type": "<machine_readable>", "message": "<human_readable>"}, "reference_id": "<uuid>"}'
+  fields:
+  - {name: error.type, required: true, description: machine-readable error type}
+  - {name: error.message, required: true, description: human-readable message}
+  - {name: reference_id, required: false, description: correlation id to share with Databook support (present on 500 internal_server_error)}
+applies_to_all_operations: true
+problems:
+- status: 400
+  type: invalid_request
+  title: The request was malformed or failed validation.
+  schema: '#/components/schemas/ErrorResponseBodyInvalidRequest'
+  remediation: "Fix the request payload/parameters against the operation schema and retry."
+  source: openapi/databook-openapi-original.json
+- status: 401
+  type: invalid_authentication_error
+  title: The access token is missing, invalid, or lacks the required permissions.
+  schema: '#/components/schemas/ErrorResponseBodyInvalidAuthentication'
+  remediation: "Send a valid bearer token issued by Databook support in the Authorization header, plus the databook-user-id and databook-tenant-id identity headers."
+  source: openapi/databook-openapi-original.json
+- status: 404
+  type: resource_not_found_error
+  title: The requested resource does not exist.
+  schema: '#/components/schemas/ErrorResponseBodyRequestedResourceNotFound'
+  remediation: "Verify the resource id (for example job_id) belongs to the calling tenant."
+  source: openapi/databook-openapi-original.json
+- status: 429
+  type: rate_limit_error
+  title: Too many requests. Slow down and retry after a short delay.
+  schema: '#/components/schemas/ErrorResponseBodyRateLimitReached'
+  remediation: "Back off and retry with exponential backoff, as the API reference instructs."
+  source: openapi/databook-openapi-original.json
+- status: 500
+  type: internal_server_error
+  title: An unexpected error occurred on Databook's side.
+  schema: '#/components/schemas/ErrorResponseBodyInternalServer'
+  remediation: "Retry; if it persists share the reference_id with Databook support."
+  source: openapi/databook-openapi-original.json
+- status: 503
+  type: server_side_overload_error
+  title: The service is temporarily overloaded or the request exceeded the 180-second call limit.
+  schema: '#/components/schemas/ErrorResponseBodyServerSideOverload'
+  remediation: "Retry later, or move long-running work to the /v1/batch/job endpoints."
+  source: openapi/databook-openapi-original.json
+validation:
+  status: 422
+  note: >-
+    The spec also declares HTTPValidationError / ValidationError components (loc, msg, type,
+    input, ctx) — the FastAPI validation shape — but no operation wires a 422 response, so
+    422 is not listed as a published problem type.
+coverage:
+  operations_total: 8
+  operations_with_4xx: 8
+  operations_with_5xx: 8

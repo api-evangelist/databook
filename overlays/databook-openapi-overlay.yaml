@@ -1,0 +1,43 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the DatabookAI REST API
+  version: 1.0.0
+extends: openapi/databook-openapi-original.json
+x-generated: '2026-08-13'
+x-method: generated
+x-source: openapi/databook-openapi-original.json
+x-note: >-
+  Non-destructive enhancements over Databook's published OpenAPI. Captures the API Evangelist
+  profile linkage, and the two content gaps found in the harvested spec: no global `security`
+  block (the HTTPBearer scheme is declared but never applied at document level), and header
+  parameters the reference calls required that the spec declares optional. Nothing here is
+  applied to the harvested document.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-profile: https://apis.io/provider/databook
+    x-apievangelist-repository: https://github.com/api-evangelist/databook
+    x-apievangelist-harvested: '2026-08-13'
+    x-apievangelist-source: https://api.databook.com/openapi.json
+- target: $
+  update:
+    x-apievangelist-observations:
+      security_block_missing: >-
+        components.securitySchemes.HTTPBearer is declared but no document-level or
+        operation-level `security` requirement references it, so a generated client will not
+        send Authorization by default even though every operation requires it.
+      identity_headers_optional: >-
+        databook-user-id and databook-tenant-id are documented as required on every call but
+        declared required:false on all 8 operations.
+      no_operation_examples: >-
+        No request or response examples are present on any operation.
+      no_rfc9457: >-
+        Errors use a custom error{type,message} envelope rather than application/problem+json.
+      no_pagination: >-
+        List operations return unbounded result arrays with no paging parameters.
+- target: $.tags
+  update:
+    x-apievangelist-note: >-
+      The insights-catalog tag carries a 66-row markdown catalogue of insight ids in its
+      description — machine-relevant data published as prose. Captured as data in
+      data-model/databook-data-model.yml.

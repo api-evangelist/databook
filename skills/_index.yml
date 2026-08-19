@@ -1,0 +1,34 @@
+generated: '2026-08-13'
+method: generated
+source: openapi/databook-openapi-original.json
+note: >-
+  Packaged Agent Skills for the DatabookAI REST API. Every step is grounded in an operationId
+  that exists verbatim in the harvested OpenAPI 3.1.0 at https://api.databook.com/openapi.json;
+  no operation, parameter, field or error type is invented. Databook publishes no skills,
+  AGENTS.md or agent guidance of its own.
+skills:
+- file: databook-batch-insight-run.md
+  name: Run a Databook batch insight job
+  description: >-
+    Select insights from the catalogue, upload a CSV of target accounts, poll the job, and
+    fetch the S3 result — the correct surface for anything larger than a single question.
+  api: openapi/databook-openapi-original.json
+  operations:
+  - list_insights_v1_insights_get
+  - get_job_input_csv_template_v1_batch_job_input_csv_template_get
+  - create_job_v1_batch_job_post
+  - get_job_by_id_v1_batch_job__job_id__get
+  - get_job_result_by_id_v1_batch_job__job_id__result_get
+- file: databook-account-research-chat.md
+  name: Research an account with Databook chat and deep reasoning
+  description: >-
+    Ask a question in a threaded conversation, then escalate to a named reasoning agent when
+    the answer needs citations and structured metadata.
+  api: openapi/databook-openapi-original.json
+  operations:
+  - chat_v1_chat_post
+  - run_reasoning_v1_reasoning_post
+  - list_insights_v1_insights_get
+coverage:
+  operations_total: 8
+  operations_covered: 8

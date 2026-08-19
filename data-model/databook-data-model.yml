@@ -1,0 +1,104 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/databook-openapi-original.json
+note: >-
+  Entity graph derived from the 25 component schemas and the operation surface of the
+  DatabookAI REST API. This is a small, task-shaped API rather than a CRUD resource graph:
+  three of the four capability groups (chat, reasoning, insights) are stateless request/response
+  calls, and only Job is a persisted, addressable resource with a lifecycle.
+entities:
+- name: Job
+  description: An asynchronous batch job created by uploading a CSV of insight requests.
+  addressable: true
+  id_field: id
+  id_type: string
+  schemas: [GetJobByIdResponse, ListJobResponse, Body_create_job_v1_batch_job_post]
+  fields:
+  - {name: id, type: string, required: true}
+  - {name: state, type: string, required: true, note: job lifecycle state}
+  - {name: stopped_reason, type: string, required: false}
+  - {name: created_at, type: string, required: true, format: timestamp-utc}
+  - {name: started_running_at, type: string, required: false, format: timestamp-utc}
+  - {name: stopped_at, type: string, required: false, format: timestamp-utc}
+  operations: [create_job_v1_batch_job_post, list_job_v1_batch_job_get, get_job_by_id_v1_batch_job__job_id__get]
+- name: JobResult
+  description: The completed output of a batch job, delivered as a link to an S3 object.
+  addressable: true
+  id_field: job_id
+  schemas: [GetJobResultByIdResponse]
+  fields:
+  - {name: job_id, type: string, required: true}
+  - {name: job_result_s3_url, type: string, required: true, note: presigned/S3 result location}
+  operations: [get_job_result_by_id_v1_batch_job__job_id__result_get]
+- name: JobInputTemplate
+  description: The CSV template describing the input format a batch job expects.
+  addressable: false
+  schemas: [GetJobInputCsvTemplateResponse]
+  fields:
+  - {name: job_input_csv_template_url, type: string, required: true}
+  operations: [get_job_input_csv_template_v1_batch_job_input_csv_template_get]
+- name: Insight
+  description: >-
+    A catalogued analytical question Databook can answer about a target company. Each insight
+    has a stable UUID that is passed as insight_id in the batch job input CSV.
+  addressable: false
+  id_field: id
+  id_type: uuid
+  schemas: [ListInsightElement, ListInsightResponse]
+  fields:
+  - {name: id, type: uuid, required: true}
+  - {name: name, type: string, required: true}
+  - {name: version, type: string, required: true}
+  - {name: description, type: string, required: true}
+  - {name: category, type: string, required: false}
+  operations: [list_insights_v1_insights_get]
+  catalog:
+    published_in_spec: true
+    location: 'tags[] "insights-catalog" description (markdown tables)'
+    count: 66
+    categories: [Competitors, Firmographics, Account Planning, Meeting Preparation, Target Account]
+- name: Conversation
+  description: A multi-turn chat thread against Databook's intelligence.
+  addressable: false
+  id_field: conversation_id
+  schemas: [ChatRequest, ChatResponse]
+  fields:
+  - {name: conversation_id, type: string, required: true, note: returned by the API; pass it back to continue a thread}
+  - {name: query, type: string, required: true}
+  - {name: content, type: string, required: true, note: the generated reply}
+  operations: [chat_v1_chat_post]
+- name: ReasoningRun
+  description: A single deep-reasoning execution against a named Databook agent.
+  addressable: false
+  schemas: [PostReasoningRequest, PostReasoningResponse]
+  fields:
+  - {name: agent_name, type: string, required: true}
+  - {name: parameters, type: object, required: false}
+  - {name: response, type: string, required: false}
+  - {name: reference_id, type: string, required: false}
+  - {name: citations, type: array, required: false}
+  - {name: metadata, type: object, required: false}
+  operations: [run_reasoning_v1_reasoning_post]
+- name: Error
+  description: The uniform error envelope returned by every operation.
+  addressable: false
+  schemas: [ErrorResponseBodyInvalidRequest, ErrorResponseBodyInvalidAuthentication, ErrorResponseBodyRequestedResourceNotFound, ErrorResponseBodyRateLimitReached, ErrorResponseBodyInternalServer, ErrorResponseBodyServerSideOverload]
+  detail: errors/databook-problem-types.yml
+relationships:
+- {from: Job, to: JobResult, kind: has_one, via: job_id}
+- {from: JobResult, to: Job, kind: belongs_to, via: job_id}
+- {from: Job, to: Insight, kind: has_many, via: 'insight_id column in the uploaded input CSV', confidence: high, evidence: 'insights-catalog tag: "Pass an insight''s ID wherever an insight_id is required (for example, in the batch job input CSV)."'}
+- {from: Job, to: JobInputTemplate, kind: has_one, via: 'CSV schema (not a foreign key)', confidence: medium}
+- {from: ListJobResponse, to: Job, kind: has_many, via: result}
+- {from: ListInsightResponse, to: Insight, kind: has_many, via: result}
+- {from: ChatResponse, to: Conversation, kind: belongs_to, via: conversation_id}
+tenancy:
+  model: header-scoped
+  fields: [databook-user-id, databook-tenant-id]
+  note: >-
+    Tenancy is not modelled in any schema — it is carried entirely by the databook-tenant-id
+    and databook-user-id request headers, so no entity above holds a tenant reference.
+summary:
+  entities: 7
+  relationships: 7
+  schemas_in_spec: 25

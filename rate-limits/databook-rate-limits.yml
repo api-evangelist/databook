@@ -1,0 +1,31 @@
+generated: '2026-08-13'
+method: searched
+source: https://api.databook.com/openapi.json
+docs: https://api.databook.com/redoc
+limit_count: 0
+note: >-
+  Databook documents THAT the API is rate limited and what happens when you exceed a limit,
+  but publishes no number: no requests-per-second/minute/day figure, no burst allowance, no
+  per-key or per-tenant scope, and no rate-limit response headers. The reference says only
+  "The API enforces rate limits to keep the service reliable for everyone" and instructs
+  callers to use exponential backoff. An integrator cannot budget against this, and an agent
+  gets no runtime signal — the 429 body is the only feedback.
+limits: []
+exhaustion:
+  status: 429
+  error_type: rate_limit_error
+  body: '{"error": {"type": "rate_limit_error", "message": "..."}}'
+  retry_after_header: not-documented
+  guidance: 'Build retries with exponential backoff into your integration to handle these responses gracefully.'
+response_headers:
+  observed: []
+  documented: []
+  note: >-
+    No X-RateLimit-*, RateLimit-* or Retry-After header is documented, and none could be
+    observed unauthenticated — every operation requires a support-issued bearer token.
+related_limits:
+- kind: request-timeout
+  value: 180 seconds
+  on_exceeded: '503 server_side_overload_error'
+  scope: any single API call
+  source: 'info.description, "Timeouts"'

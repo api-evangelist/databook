@@ -1,0 +1,42 @@
+generated: '2026-08-13'
+method: searched
+source: https://api.databook.com/openapi.json
+versioning:
+  scheme: uri-path
+  current: v1
+  spec_version: "0.6.0"
+  policy_url: null
+  note: >-
+    Every path is prefixed /v1/. The OpenAPI document carries its own info.version
+    (0.6.0), which is the only published version signal that moves; there is no
+    documented version-support window, no dated version train, and no version request header.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  note: >-
+    No deprecation policy, no RFC 8594 Sunset/Deprecation header support, and no operation in
+    the spec is marked deprecated. No Deprecation pointer is emitted in apis.yml.
+deprecated_operations: []
+sla:
+  url: null
+  uptime_target: null
+  note: >-
+    No public SLA. Availability is one of the two SOC 2 trust service criteria Databook was
+    audited against (security and availability), but no uptime target is published.
+status_page:
+  url: https://status.databook.com/
+  public: false
+  http_status: 403
+  gate: Cloudflare Access
+  note: >-
+    A status host exists but is NOT public — status.databook.com returns HTTP 403 behind
+    Cloudflare Access (cf-access-domain: status.databook.com), so only authenticated
+    customers can read incident history. No StatusPage pointer is emitted in apis.yml,
+    because the pointer asserts a page the public can read.
+changelog:
+  url: null
+  note: >-
+    No API changelog or release-notes page. databook.com/resources carries a "Product Updates"
+    marketing category, but it is undated release marketing rather than a versioned API
+    changelog, and it is not wired to the API reference.

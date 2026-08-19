@@ -1,0 +1,22 @@
+generated: '2026-08-13'
+method: searched
+source: https://databook.com/
+plan_count: 0
+plans: []
+note: >-
+  Databook publishes no pricing page and no plans. databook.com has no /pricing entry in its
+  sitemap.xml, and the site is a single-page app that answers HTTP 200 with the marketing
+  shell for any path, so a 200 on /pricing is not a pricing page. The commercial motion is
+  enterprise sales — the site's calls to action are "Book a demo" and a paid one-day
+  evaluation engagement. API access is not sold self-serve either: the API reference states
+  access is "provisioned by Databook support", so there is no published rate card, tier,
+  quota, or overage for the REST API.
+access:
+  self_serve: false
+  onboarding: 'contact sales / provisioned by Databook support'
+  free_tier: false
+  trial: false
+evidence:
+- {url: 'https://databook.com/sitemap.xml', status: 200, note: '18 URLs, no /pricing'}
+- {url: 'https://databook.com/pricing', status: 200, note: 'SPA catch-all returns the marketing shell, not a pricing page'}
+- {url: 'https://api.databook.com/openapi.json', status: 200, note: '"Access is provisioned by Databook support, who issue the credentials your application uses to authenticate."'}

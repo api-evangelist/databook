@@ -1,0 +1,40 @@
+generated: '2026-08-13'
+method: probed
+source: live GET of /.well-known/* on every Databook host
+note: >-
+  Every /.well-known/ path probed returned 404 on both the API host and the marketing
+  host. Databook publishes no discovery surface at /.well-known/. No WellKnown or
+  SecurityTxt pointer is emitted in apis.yml, because this file records an ABSENCE —
+  the probe is the data, not a served document. The chat./app. hosts were excluded:
+  that single-page app answers HTTP 200 with the same 1,346-byte HTML shell for every
+  path, including /.well-known/*, so a 200 there is not evidence of a document.
+hosts:
+- host: https://api.databook.com
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+  - {path: /llms.txt, status: 404}
+- host: https://databook.com
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+  - {path: /llms.txt, status: 404}
+excluded_hosts:
+- host: https://chat.databook.com
+  reason: SPA catch-all returns 200 with an HTML shell for every path; a 200 is not a document
+- host: https://app.databook.com
+  reason: SPA catch-all returns 200 with an HTML shell for every path; a 200 is not a document
+summary:
+  paths_probed: 17
+  documents_found: 0

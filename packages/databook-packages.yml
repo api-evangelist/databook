@@ -1,0 +1,25 @@
+generated: '2026-08-13'
+method: searched
+source: 'npm registry search, PyPI, GitHub org lookup, https://api.databook.com/openapi.json'
+package_count: 0
+packages: []
+note: >-
+  Databook publishes NO first-party client library in any registry. Searched npm
+  (registry.npmjs.org search "databook" and the scoped name @databook/sdk → 404), PyPI
+  (databook → 404, databookai → 404), and the docs bundle, which links only to
+  https://api.databook.com/openapi.json and names no SDK. The one npm package literally
+  named "databook" (1.0.0, published 2020-09-26, github.com/bassdman/databook, "create
+  visual databooks") is an unrelated third-party project and is NOT catalogued here.
+  github.com/databook exists but has 0 public repositories, no website link and no
+  attribution to DatabookAI, so it is not recorded as their GitHub organization.
+  No SDKs pointer is emitted in apis.yml — there is no SDK to point at.
+registries_checked:
+- {registry: npm, query: databook, result: 'no first-party package'}
+- {registry: npm, query: '@databook/sdk', status: 404}
+- {registry: pypi, query: databook, status: 404}
+- {registry: pypi, query: databookai, status: 404}
+- {registry: github, query: 'orgs/databook', status: 200, note: '0 public repos, unattributed'}
+- {registry: github, query: 'orgs/databookai', status: 404}
+integration_path: >-
+  Consumers integrate against the raw REST API using the OpenAPI 3.1.0 document at
+  https://api.databook.com/openapi.json — generating a client is the only path Databook offers.

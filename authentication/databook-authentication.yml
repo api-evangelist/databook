@@ -1,0 +1,12 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/databook-openapi-original.json
+summary:
+  types:
+  - http
+schemes:
+- name: HTTPBearer
+  type: http
+  scheme: bearer
+  sources:
+  - openapi/databook-openapi-original.json

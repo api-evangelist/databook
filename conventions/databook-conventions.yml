@@ -1,0 +1,88 @@
+generated: '2026-08-13'
+method: searched
+source: https://api.databook.com/openapi.json
+docs: https://api.databook.com/redoc
+note: >-
+  Cross-cutting request/response semantics for the DatabookAI REST API, taken from the
+  narrative sections the provider publishes inside info.description (Getting started,
+  Authentication, Requests and responses, Errors, Rate limits, Timeouts) and confirmed
+  against the operation definitions in the same spec.
+authentication:
+  style: http-bearer
+  header: 'Authorization: Bearer <token>'
+  scheme_name: HTTPBearer
+  issuance: 'Provisioned by Databook support — there is no self-serve key or OAuth flow.'
+  identity_headers:
+  - name: databook-user-id
+    required_by_docs: true
+    declared_required_in_spec: false
+    description: Identifier of the user the request is made on behalf of.
+  - name: databook-tenant-id
+    required_by_docs: true
+    declared_required_in_spec: false
+    description: Identifier of the tenant (organization) the request belongs to.
+  note: >-
+    The reference states these identity headers are required on every call, but the OpenAPI
+    declares both as optional (required: false, anyOf string/null) on all 8 operations. That
+    is a real docs-vs-spec divergence, recorded here rather than resolved.
+  detail: authentication/databook-authentication.yml
+idempotency:
+  supported: false
+  header: null
+  note: >-
+    No idempotency key header, parameter, or retry-safety contract is documented or present
+    in the spec. POST /v1/batch/job, POST /v1/chat and POST /v1/reasoning carry no
+    deduplication mechanism, so a retried write may run twice. No Idempotency pointer is
+    emitted in apis.yml.
+pagination:
+  supported: false
+  note: >-
+    GET /v1/batch/job and GET /v1/insights return an unbounded `result` array with no limit,
+    offset, cursor, or page parameter declared anywhere in the spec.
+content_types:
+  request: [application/json, multipart/form-data]
+  response: [application/json]
+  note: >-
+    All bodies are JSON except the batch job creation endpoint, which uploads a CSV as
+    multipart/form-data. Every response, including errors, returns JSON.
+data_types:
+  timestamps: UTC
+  ids: string
+  note: 'Published verbatim: "Timestamps are UTC and IDs are strings unless otherwise noted in the schema."'
+request_tracing:
+  request_id_header: null
+  correlation_field: reference_id
+  note: >-
+    There is no request-id request header. Correlation is response-side only: a `reference_id`
+    is returned on 500 internal_server_error and on POST /v1/reasoning responses, to be shared
+    with Databook support.
+versioning:
+  scheme: uri-path
+  current: v1
+  spec_version: "0.6.0"
+  note: 'Every path is prefixed /v1/. The OpenAPI document itself is versioned separately (info.version).'
+  detail: lifecycle/databook-lifecycle.yml
+errors:
+  envelope: 'error{type,message} + reference_id'
+  rfc9457: false
+  detail: errors/databook-problem-types.yml
+rate_limits:
+  documented: true
+  numbers_published: false
+  exhaustion_status: 429
+  exhaustion_type: rate_limit_error
+  response_headers: []
+  guidance: 'Build retries with exponential backoff into your integration.'
+  detail: rate-limits/databook-rate-limits.yml
+timeouts:
+  max_call_seconds: 180
+  on_exceeded: '503 server_side_overload_error'
+  guidance: 'For long-running workloads, prefer the batch endpoints, which process work asynchronously.'
+async_pattern:
+  style: job-polling
+  create: 'POST /v1/batch/job (multipart CSV upload)'
+  poll: 'GET /v1/batch/job/{job_id} → state, stopped_reason, started_running_at, stopped_at'
+  fetch: 'GET /v1/batch/job/{job_id}/result → job_result_s3_url (presigned result location)'
+  template: 'GET /v1/batch/job/input-csv-template → job_input_csv_template_url'
+  callbacks: none
+  note: 'No webhook or callback surface exists; completion is discovered by polling the job resource.'
