@@ -36,7 +36,7 @@ accessModel:
     Confirmed by the provider's own API reference: "Access is provisioned by Databook support,
     who issue the credentials your application uses to authenticate." No pricing page, no
     self-serve signup, no free tier, no sandbox.
-specificationVersion: '0.20'
+specificationVersion: '0.23'
 created: '2026-07-17'
 modified: '2026-08-13'
 image: https://storage.googleapis.com/gpt-engineer-file-uploads/rfjG12z2plW0k4X3iSgJgycEVfj1/social-images/social-1779217719891-Databook_Preview_Home.webp
