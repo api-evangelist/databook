@@ -56,32 +56,16 @@ tags:
 - Reasoning
 - Company Data
 apis:
-- name: DatabookAI REST API
-  description: >-
-    REST API for integrating Databook's account intelligence into other applications. Eight
-    operations across four groups: an insight catalog (66 catalogued analytical questions about
-    a target company, each with a stable UUID), asynchronous batch jobs that run those insights
-    over a CSV of target accounts and return results as an S3 file, a threaded chat endpoint,
-    and a deep-reasoning endpoint that runs a named Databook agent and returns a response with
-    citations and metadata. Authentication is a bearer token issued by Databook support plus
-    databook-user-id and databook-tenant-id identity headers. Any single call is cut off at 180
-    seconds; longer work belongs on the batch endpoints. No webhooks, no pagination, no
-    idempotency keys.
+- aid: databook:databook-batch-create-api
+  name: Databook batch - create API
+  description: The batch - create API from Databook — 3 operation(s) for batch - create.
   humanURL: https://api.databook.com/redoc
   baseURL: https://api.databook.com
   tags:
-  - Sales Intelligence
-  - Account Intelligence
-  - Artificial Intelligence
-  - REST API
-  - OpenAPI
-  - Batch Processing
-  - Reasoning
+  - batch - create
   properties:
   - type: OpenAPI
-    url: openapi/databook-openapi-original.json
-  - type: OpenAPI
-    url: https://api.databook.com/openapi.json
+    url: openapi/databook-batch-create-api-openapi.yml
   - type: Documentation
     url: https://api.databook.com/redoc
   - type: APIReference
@@ -100,12 +84,98 @@ apis:
     url: rate-limits/databook-rate-limits.yml
   - type: Lifecycle
     url: lifecycle/databook-lifecycle.yml
-  - type: Overlay
-    url: overlays/databook-openapi-overlay.yaml
   - type: AgenticAccess
     url: agentic-access/databook-agentic-access.yml
-  - type: AgentSkill
-    url: skills/_index.yml
+- aid: databook:databook-batch-query-api
+  name: Databook batch - query API
+  description: The batch - query API from Databook — 3 operation(s) for batch - query.
+  humanURL: https://api.databook.com/redoc
+  baseURL: https://api.databook.com
+  tags:
+  - batch - query
+  properties:
+  - type: OpenAPI
+    url: openapi/databook-batch-query-api-openapi.yml
+  - type: Documentation
+    url: https://api.databook.com/redoc
+  - type: APIReference
+    url: https://api.databook.com/redoc
+  - type: GettingStarted
+    url: https://api.databook.com/redoc#section/Getting-started
+  - type: Authentication
+    url: authentication/databook-authentication.yml
+  - type: Conventions
+    url: conventions/databook-conventions.yml
+  - type: ErrorCatalog
+    url: errors/databook-problem-types.yml
+  - type: DataModel
+    url: data-model/databook-data-model.yml
+  - type: RateLimits
+    url: rate-limits/databook-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/databook-lifecycle.yml
+  - type: AgenticAccess
+    url: agentic-access/databook-agentic-access.yml
+- aid: databook:databook-chat-api
+  name: Databook Chat API
+  description: The chat API from Databook — 1 operation(s) for chat.
+  humanURL: https://api.databook.com/redoc
+  baseURL: https://api.databook.com
+  tags:
+  - chat
+  properties:
+  - type: OpenAPI
+    url: openapi/databook-chat-api-openapi.yml
+  - type: Documentation
+    url: https://api.databook.com/redoc
+  - type: APIReference
+    url: https://api.databook.com/redoc
+  - type: GettingStarted
+    url: https://api.databook.com/redoc#section/Getting-started
+  - type: Authentication
+    url: authentication/databook-authentication.yml
+  - type: Conventions
+    url: conventions/databook-conventions.yml
+  - type: ErrorCatalog
+    url: errors/databook-problem-types.yml
+  - type: DataModel
+    url: data-model/databook-data-model.yml
+  - type: RateLimits
+    url: rate-limits/databook-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/databook-lifecycle.yml
+  - type: AgenticAccess
+    url: agentic-access/databook-agentic-access.yml
+- aid: databook:databook-reasoning-api
+  name: Databook Reasoning API
+  description: The reasoning API from Databook — 1 operation(s) for reasoning.
+  humanURL: https://api.databook.com/redoc
+  baseURL: https://api.databook.com
+  tags:
+  - reasoning
+  properties:
+  - type: OpenAPI
+    url: openapi/databook-reasoning-api-openapi.yml
+  - type: Documentation
+    url: https://api.databook.com/redoc
+  - type: APIReference
+    url: https://api.databook.com/redoc
+  - type: GettingStarted
+    url: https://api.databook.com/redoc#section/Getting-started
+  - type: Authentication
+    url: authentication/databook-authentication.yml
+  - type: Conventions
+    url: conventions/databook-conventions.yml
+  - type: ErrorCatalog
+    url: errors/databook-problem-types.yml
+  - type: DataModel
+    url: data-model/databook-data-model.yml
+  - type: RateLimits
+    url: rate-limits/databook-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/databook-lifecycle.yml
+  - type: AgenticAccess
+    url: agentic-access/databook-agentic-access.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
