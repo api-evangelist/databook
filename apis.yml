@@ -133,6 +133,8 @@ apis:
   humanURL: https://api.databook.com/redoc
   baseURL: https://api.databook.com
   tags:
+  - Chat
+  tags_raw:
   - chat
   properties:
   - type: OpenAPI
@@ -163,6 +165,8 @@ apis:
   humanURL: https://api.databook.com/redoc
   baseURL: https://api.databook.com
   tags:
+  - Reasoning
+  tags_raw:
   - reasoning
   properties:
   - type: OpenAPI
