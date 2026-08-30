@@ -1,0 +1,274 @@
+openapi: 3.2.0
+info:
+  title: DatabookAI REST Reasoning API
+  summary: Integrate DatabookAI's intelligence into your applications with a simple, reliable, and secure REST API.
+  description: "\n## Introduction\nThe DatabookAI REST API lets you integrate DatabookAI's intelligence directly into your own applications and workflows. Browse the available operations, grouped by resource, in the **Endpoints** section below.\n\nThe API uses standard HTTP methods, predictable resource-oriented URLs, and JSON-encoded request and response bodies. Every response, including errors, returns JSON.\n\n## Getting started\n1. Obtain API access. Access is provisioned by Databook support, who issue the credentials your application uses to authenticate.\n2. Send your first request. Include your access token in the `Authorization` header (see **Authentication**) and the required identity headers on every call.\n3. Handle the response. Successful calls return a `2xx` status with a JSON body; failures return a JSON error object with a consistent shape (see **Errors**).\n\n### Prerequisites\n- An active Databook account.\n- API access provisioned by Databook support.\n\n## Authentication\nAll requests must be authenticated with a bearer token issued by Databook support. Pass the token in the `Authorization` header:\n\n```\nAuthorization: Bearer <YOUR_ACCESS_TOKEN>\n```\n\nRequests must also include the following identity headers so the API can resolve the calling user and tenant:\n\n| Header | Description |\n| --- | --- |\n| `databook-user-id` | Identifier of the user the request is made on behalf of. |\n| `databook-tenant-id` | Identifier of the tenant (organization) the request belongs to. |\n\nRequests that are missing or presenting an invalid token receive a `401 Invalid authentication` response. Tokens that lack the required permissions receive a `401` as well. Keep your token secret. Do not embed it in client-side code or commit it to source control.\n\n## Requests and responses\n- All request and response bodies are JSON, except file uploads (for example, the batch job endpoint), which use `multipart/form-data`.\n- Send `Content-Type: application/json` for endpoints that accept a JSON body.\n- Timestamps are UTC and IDs are strings unless otherwise noted in the schema.\n\n## Errors\nThe API uses conventional HTTP status codes to indicate the outcome of a request. Codes in the `2xx` range indicate success, `4xx` codes indicate a problem with the request (for example, a missing parameter or invalid token), and `5xx` codes indicate an error on Databook's side.\n\nEvery error response shares the same shape: an `error` object containing a machine-readable `type` and a human-readable `message`. Some responses also include a `reference_id` you can share with Databook support to help investigate the issue.\n\n```json\n{\n  \"error\": {\n    \"type\": \"invalid_request\",\n    \"message\": \"Invalid request\"\n  },\n  \"reference_id\": \"b1f2c3d4-...\"\n}\n```\n\n| Status | Error type | Meaning |\n| --- | --- | --- |\n| `400` | `invalid_request` | The request was malformed or failed validation. |\n| `401` | `invalid_authentication_error` | The access token is missing, invalid, or lacks the required permissions. |\n| `404` | `resource_not_found_error` | The requested resource does not exist. |\n| `429` | `rate_limit_error` | Too many requests. Slow down and retry after a short delay. |\n| `500` | `internal_server_error` | An unexpected error occurred on Databook's side. |\n| `503` | `server_side_overload_error` | The service is temporarily overloaded or the request exceeded the time limit. Retry later. |\n\n## Rate limits\nThe API enforces rate limits to keep the service reliable for everyone. When you exceed a limit, requests return `429 rate_limit_error`. Build retries with exponential backoff into your integration to handle these responses gracefully.\n\n## Timeouts\nThe maximum duration for any single API call is 180 seconds. Requests that exceed this limit return a `503 server_side_overload_error`. For long-running workloads, prefer the batch endpoints, which process work asynchronously.\n\n## Legal\n<a href=\"https://databook.com/privacy/\" target=\"_blank\" rel=\"noopener noreferrer\">Privacy Policy</a><br />\n<a href=\"https://databook.com/terms/\" target=\"_blank\" rel=\"noopener noreferrer\">Terms and Conditions</a><br />\n<a href=\"https://trust.databook.com/\" target=\"_blank\" rel=\"noopener noreferrer\">Security Trust Center</a><br />\n<a href=\"https://databook.com/\" target=\"_blank\" rel=\"noopener noreferrer\">Databook</a><br />\n\n## Endpoints\n"
+  version: 0.6.0
+servers:
+- url: https://api.databook.com
+tags:
+- name: reasoning
+  x-displayName: Reasoning
+paths:
+  /v1/reasoning:
+    post:
+      tags:
+      - reasoning
+      summary: Run deep reasoning
+      description: Run deep reasoning with the given agent and parameters.
+      operationId: run_reasoning_v1_reasoning_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: databook-user-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Databook-User-Id
+      - name: databook-tenant-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Databook-Tenant-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostReasoningRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostReasoningResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInvalidRequest'
+        '401':
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInvalidAuthentication'
+        '404':
+          description: Requested resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyRequestedResourceNotFound'
+        '429':
+          description: Rate limit reached
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyRateLimitReached'
+        '500':
+          description: Unexpected error on server side
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInternalServer'
+        '503':
+          description: Server side overload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyServerSideOverload'
+components:
+  schemas:
+    ErrorResponseBodyRateLimitReached:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectRateLimitReached'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyRateLimitReached
+    ErrorResponseBodyErrorObjectInvalidAuthentication:
+      properties:
+        type:
+          type: string
+          const: invalid_authentication_error
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectInvalidAuthentication
+    ErrorResponseBodyInternalServer:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInternalServer'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyInternalServer
+    ErrorResponseBodyErrorObjectServerSideOverload:
+      properties:
+        type:
+          type: string
+          const: server_side_overload_error
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectServerSideOverload
+    PostReasoningRequest:
+      properties:
+        agent_name:
+          type: string
+          title: Agent Name
+        parameters:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Parameters
+      type: object
+      required:
+      - agent_name
+      title: PostReasoningRequest
+    ErrorResponseBodyRequestedResourceNotFound:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectRequestedResourceNotFound'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyRequestedResourceNotFound
+    ErrorResponseBodyInvalidAuthentication:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInvalidAuthentication'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyInvalidAuthentication
+    ErrorResponseBodyInvalidRequest:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInvalidRequest'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyInvalidRequest
+    PostReasoningResponse:
+      properties:
+        response:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Response
+        reference_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reference Id
+        citations:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Citations
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      title: PostReasoningResponse
+    ErrorResponseBodyErrorObjectInvalidRequest:
+      properties:
+        type:
+          type: string
+          const: invalid_request
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectInvalidRequest
+    ErrorResponseBodyErrorObjectRequestedResourceNotFound:
+      properties:
+        type:
+          type: string
+          const: resource_not_found_error
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectRequestedResourceNotFound
+    ErrorResponseBodyErrorObjectInternalServer:
+      properties:
+        type:
+          type: string
+          const: internal_server_error
+          title: Type
+        message:
+          type: string
+          title: Message
+        reference_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reference Id
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectInternalServer
+    ErrorResponseBodyErrorObjectRateLimitReached:
+      properties:
+        type:
+          type: string
+          const: rate_limit_error
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectRateLimitReached
+    ErrorResponseBodyServerSideOverload:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectServerSideOverload'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyServerSideOverload
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer
