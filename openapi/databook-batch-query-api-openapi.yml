@@ -230,19 +230,11 @@ paths:
                 $ref: '#/components/schemas/ErrorResponseBodyServerSideOverload'
 components:
   schemas:
-    ErrorResponseBodyInvalidAuthentication:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInvalidAuthentication'
-      type: object
-      required:
-      - error
-      title: ErrorResponseBodyInvalidAuthentication
-    ErrorResponseBodyErrorObjectInvalidAuthentication:
+    ErrorResponseBodyErrorObjectRequestedResourceNotFound:
       properties:
         type:
           type: string
-          const: invalid_authentication_error
+          const: resource_not_found_error
           title: Type
         message:
           type: string
@@ -251,42 +243,7 @@ components:
       required:
       - type
       - message
-      title: ErrorResponseBodyErrorObjectInvalidAuthentication
-    GetJobResultByIdResponse:
-      properties:
-        job_id:
-          type: string
-          title: Job Id
-        job_result_s3_url:
-          type: string
-          title: Job Result S3 Url
-      type: object
-      required:
-      - job_id
-      - job_result_s3_url
-      title: GetJobResultByIdResponse
-    ErrorResponseBodyErrorObjectServerSideOverload:
-      properties:
-        type:
-          type: string
-          const: server_side_overload_error
-          title: Type
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - type
-      - message
-      title: ErrorResponseBodyErrorObjectServerSideOverload
-    ErrorResponseBodyRequestedResourceNotFound:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectRequestedResourceNotFound'
-      type: object
-      required:
-      - error
-      title: ErrorResponseBodyRequestedResourceNotFound
+      title: ErrorResponseBodyErrorObjectRequestedResourceNotFound
     ErrorResponseBodyErrorObjectInternalServer:
       properties:
         type:
@@ -306,33 +263,28 @@ components:
       - type
       - message
       title: ErrorResponseBodyErrorObjectInternalServer
-    ListJobResponse:
-      properties:
-        result:
-          items:
-            $ref: '#/components/schemas/GetJobByIdResponse'
-          type: array
-          title: Result
-      type: object
-      required:
-      - result
-      title: ListJobResponse
-    ErrorResponseBodyServerSideOverload:
+    ErrorResponseBodyRateLimitReached:
       properties:
         error:
-          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectServerSideOverload'
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectRateLimitReached'
       type: object
       required:
       - error
-      title: ErrorResponseBodyServerSideOverload
-    ErrorResponseBodyInternalServer:
+      title: ErrorResponseBodyRateLimitReached
+    ErrorResponseBodyErrorObjectRateLimitReached:
       properties:
-        error:
-          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInternalServer'
+        type:
+          type: string
+          const: rate_limit_error
+          title: Type
+        message:
+          type: string
+          title: Message
       type: object
       required:
-      - error
-      title: ErrorResponseBodyInternalServer
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectRateLimitReached
     ErrorResponseBodyErrorObjectInvalidRequest:
       properties:
         type:
@@ -347,28 +299,6 @@ components:
       - type
       - message
       title: ErrorResponseBodyErrorObjectInvalidRequest
-    ErrorResponseBodyErrorObjectRequestedResourceNotFound:
-      properties:
-        type:
-          type: string
-          const: resource_not_found_error
-          title: Type
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - type
-      - message
-      title: ErrorResponseBodyErrorObjectRequestedResourceNotFound
-    ErrorResponseBodyRateLimitReached:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectRateLimitReached'
-      type: object
-      required:
-      - error
-      title: ErrorResponseBodyRateLimitReached
     GetJobByIdResponse:
       properties:
         id:
@@ -401,11 +331,19 @@ components:
       - state
       - created_at
       title: GetJobByIdResponse
-    ErrorResponseBodyErrorObjectRateLimitReached:
+    ErrorResponseBodyInternalServer:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInternalServer'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyInternalServer
+    ErrorResponseBodyErrorObjectInvalidAuthentication:
       properties:
         type:
           type: string
-          const: rate_limit_error
+          const: invalid_authentication_error
           title: Type
         message:
           type: string
@@ -414,7 +352,7 @@ components:
       required:
       - type
       - message
-      title: ErrorResponseBodyErrorObjectRateLimitReached
+      title: ErrorResponseBodyErrorObjectInvalidAuthentication
     ErrorResponseBodyInvalidRequest:
       properties:
         error:
@@ -423,6 +361,68 @@ components:
       required:
       - error
       title: ErrorResponseBodyInvalidRequest
+    ErrorResponseBodyErrorObjectServerSideOverload:
+      properties:
+        type:
+          type: string
+          const: server_side_overload_error
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectServerSideOverload
+    ListJobResponse:
+      properties:
+        result:
+          items:
+            $ref: '#/components/schemas/GetJobByIdResponse'
+          type: array
+          title: Result
+      type: object
+      required:
+      - result
+      title: ListJobResponse
+    ErrorResponseBodyServerSideOverload:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectServerSideOverload'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyServerSideOverload
+    ErrorResponseBodyRequestedResourceNotFound:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectRequestedResourceNotFound'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyRequestedResourceNotFound
+    ErrorResponseBodyInvalidAuthentication:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInvalidAuthentication'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyInvalidAuthentication
+    GetJobResultByIdResponse:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+        job_result_s3_url:
+          type: string
+          title: Job Result S3 Url
+      type: object
+      required:
+      - job_id
+      - job_result_s3_url
+      title: GetJobResultByIdResponse
   securitySchemes:
     HTTPBearer:
       type: http
