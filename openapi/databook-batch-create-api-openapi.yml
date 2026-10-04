@@ -232,27 +232,11 @@ paths:
                 $ref: '#/components/schemas/ErrorResponseBodyServerSideOverload'
 components:
   schemas:
-    ErrorResponseBodyRateLimitReached:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectRateLimitReached'
-      type: object
-      required:
-      - error
-      title: ErrorResponseBodyRateLimitReached
-    ErrorResponseBodyRequestedResourceNotFound:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectRequestedResourceNotFound'
-      type: object
-      required:
-      - error
-      title: ErrorResponseBodyRequestedResourceNotFound
-    ErrorResponseBodyErrorObjectRateLimitReached:
+    ErrorResponseBodyErrorObjectRequestedResourceNotFound:
       properties:
         type:
           type: string
-          const: rate_limit_error
+          const: resource_not_found_error
           title: Type
         message:
           type: string
@@ -261,23 +245,51 @@ components:
       required:
       - type
       - message
-      title: ErrorResponseBodyErrorObjectRateLimitReached
-    ErrorResponseBodyInvalidAuthentication:
+      title: ErrorResponseBodyErrorObjectRequestedResourceNotFound
+    GetJobInputCsvTemplateResponse:
+      properties:
+        job_input_csv_template_url:
+          type: string
+          title: Job Input Csv Template Url
+      type: object
+      required:
+      - job_input_csv_template_url
+      title: GetJobInputCsvTemplateResponse
+    ListInsightElement:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        version:
+          type: integer
+          title: Version
+        description:
+          type: string
+          title: Description
+        category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Category
+      type: object
+      required:
+      - id
+      - name
+      - version
+      - description
+      title: ListInsightElement
+    ErrorResponseBodyRequestedResourceNotFound:
       properties:
         error:
-          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInvalidAuthentication'
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectRequestedResourceNotFound'
       type: object
       required:
       - error
-      title: ErrorResponseBodyInvalidAuthentication
-    ErrorResponseBodyServerSideOverload:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectServerSideOverload'
-      type: object
-      required:
-      - error
-      title: ErrorResponseBodyServerSideOverload
+      title: ErrorResponseBodyRequestedResourceNotFound
     GetJobByIdResponse:
       properties:
         id:
@@ -310,78 +322,14 @@ components:
       - state
       - created_at
       title: GetJobByIdResponse
-    ErrorResponseBodyErrorObjectInternalServer:
-      properties:
-        type:
-          type: string
-          const: internal_server_error
-          title: Type
-        message:
-          type: string
-          title: Message
-        reference_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Reference Id
-      type: object
-      required:
-      - type
-      - message
-      title: ErrorResponseBodyErrorObjectInternalServer
-    ErrorResponseBodyInvalidRequest:
+    ErrorResponseBodyServerSideOverload:
       properties:
         error:
-          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInvalidRequest'
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectServerSideOverload'
       type: object
       required:
       - error
-      title: ErrorResponseBodyInvalidRequest
-    ErrorResponseBodyErrorObjectInvalidRequest:
-      properties:
-        type:
-          type: string
-          const: invalid_request
-          title: Type
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - type
-      - message
-      title: ErrorResponseBodyErrorObjectInvalidRequest
-    ErrorResponseBodyInternalServer:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInternalServer'
-      type: object
-      required:
-      - error
-      title: ErrorResponseBodyInternalServer
-    GetJobInputCsvTemplateResponse:
-      properties:
-        job_input_csv_template_url:
-          type: string
-          title: Job Input Csv Template Url
-      type: object
-      required:
-      - job_input_csv_template_url
-      title: GetJobInputCsvTemplateResponse
-    ErrorResponseBodyErrorObjectRequestedResourceNotFound:
-      properties:
-        type:
-          type: string
-          const: resource_not_found_error
-          title: Type
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - type
-      - message
-      title: ErrorResponseBodyErrorObjectRequestedResourceNotFound
+      title: ErrorResponseBodyServerSideOverload
     ListInsightResponse:
       properties:
         result:
@@ -393,6 +341,14 @@ components:
       required:
       - result
       title: ListInsightResponse
+    ErrorResponseBodyInternalServer:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInternalServer'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyInternalServer
     ErrorResponseBodyErrorObjectInvalidAuthentication:
       properties:
         type:
@@ -407,6 +363,36 @@ components:
       - type
       - message
       title: ErrorResponseBodyErrorObjectInvalidAuthentication
+    ErrorResponseBodyRateLimitReached:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectRateLimitReached'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyRateLimitReached
+    ErrorResponseBodyErrorObjectRateLimitReached:
+      properties:
+        type:
+          type: string
+          const: rate_limit_error
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectRateLimitReached
+    ErrorResponseBodyInvalidRequest:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInvalidRequest'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyInvalidRequest
     ErrorResponseBodyErrorObjectServerSideOverload:
       properties:
         type:
@@ -431,33 +417,47 @@ components:
       required:
       - file
       title: Body_create_job_v1_batch_job_post
-    ListInsightElement:
+    ErrorResponseBodyErrorObjectInternalServer:
       properties:
-        id:
+        type:
           type: string
-          format: uuid
-          title: Id
-        name:
+          const: internal_server_error
+          title: Type
+        message:
           type: string
-          title: Name
-        version:
-          type: integer
-          title: Version
-        description:
-          type: string
-          title: Description
-        category:
+          title: Message
+        reference_id:
           anyOf:
           - type: string
           - type: 'null'
-          title: Category
+          title: Reference Id
       type: object
       required:
-      - id
-      - name
-      - version
-      - description
-      title: ListInsightElement
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectInternalServer
+    ErrorResponseBodyErrorObjectInvalidRequest:
+      properties:
+        type:
+          type: string
+          const: invalid_request
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectInvalidRequest
+    ErrorResponseBodyInvalidAuthentication:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInvalidAuthentication'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyInvalidAuthentication
   securitySchemes:
     HTTPBearer:
       type: http
