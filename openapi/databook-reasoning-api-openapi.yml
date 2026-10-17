@@ -89,36 +89,6 @@ paths:
                 $ref: '#/components/schemas/ErrorResponseBodyServerSideOverload'
 components:
   schemas:
-    ErrorResponseBodyErrorObjectRequestedResourceNotFound:
-      properties:
-        type:
-          type: string
-          const: resource_not_found_error
-          title: Type
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - type
-      - message
-      title: ErrorResponseBodyErrorObjectRequestedResourceNotFound
-    ErrorResponseBodyRequestedResourceNotFound:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectRequestedResourceNotFound'
-      type: object
-      required:
-      - error
-      title: ErrorResponseBodyRequestedResourceNotFound
-    ErrorResponseBodyServerSideOverload:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectServerSideOverload'
-      type: object
-      required:
-      - error
-      title: ErrorResponseBodyServerSideOverload
     ErrorResponseBodyRateLimitReached:
       properties:
         error:
@@ -127,6 +97,14 @@ components:
       required:
       - error
       title: ErrorResponseBodyRateLimitReached
+    ErrorResponseBodyInvalidRequest:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInvalidRequest'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyInvalidRequest
     ErrorResponseBodyInternalServer:
       properties:
         error:
@@ -135,20 +113,6 @@ components:
       required:
       - error
       title: ErrorResponseBodyInternalServer
-    ErrorResponseBodyErrorObjectInvalidAuthentication:
-      properties:
-        type:
-          type: string
-          const: invalid_authentication_error
-          title: Type
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - type
-      - message
-      title: ErrorResponseBodyErrorObjectInvalidAuthentication
     PostReasoningRequest:
       properties:
         agent_name:
@@ -164,28 +128,22 @@ components:
       required:
       - agent_name
       title: PostReasoningRequest
-    ErrorResponseBodyErrorObjectRateLimitReached:
-      properties:
-        type:
-          type: string
-          const: rate_limit_error
-          title: Type
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - type
-      - message
-      title: ErrorResponseBodyErrorObjectRateLimitReached
-    ErrorResponseBodyInvalidRequest:
+    ErrorResponseBodyServerSideOverload:
       properties:
         error:
-          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInvalidRequest'
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectServerSideOverload'
       type: object
       required:
       - error
-      title: ErrorResponseBodyInvalidRequest
+      title: ErrorResponseBodyServerSideOverload
+    ErrorResponseBodyInvalidAuthentication:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInvalidAuthentication'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyInvalidAuthentication
     ErrorResponseBodyErrorObjectServerSideOverload:
       properties:
         type:
@@ -200,6 +158,89 @@ components:
       - type
       - message
       title: ErrorResponseBodyErrorObjectServerSideOverload
+    ErrorResponseBodyErrorObjectInternalServer:
+      properties:
+        type:
+          type: string
+          const: internal_server_error
+          title: Type
+        message:
+          type: string
+          title: Message
+        reference_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reference Id
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectInternalServer
+    ErrorResponseBodyErrorObjectRateLimitReached:
+      properties:
+        type:
+          type: string
+          const: rate_limit_error
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectRateLimitReached
+    ErrorResponseBodyErrorObjectInvalidRequest:
+      properties:
+        type:
+          type: string
+          const: invalid_request
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectInvalidRequest
+    ErrorResponseBodyErrorObjectRequestedResourceNotFound:
+      properties:
+        type:
+          type: string
+          const: resource_not_found_error
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectRequestedResourceNotFound
+    ErrorResponseBodyErrorObjectInvalidAuthentication:
+      properties:
+        type:
+          type: string
+          const: invalid_authentication_error
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectInvalidAuthentication
+    ErrorResponseBodyRequestedResourceNotFound:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectRequestedResourceNotFound'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyRequestedResourceNotFound
     PostReasoningResponse:
       properties:
         response:
@@ -229,47 +270,6 @@ components:
           title: Metadata
       type: object
       title: PostReasoningResponse
-    ErrorResponseBodyErrorObjectInternalServer:
-      properties:
-        type:
-          type: string
-          const: internal_server_error
-          title: Type
-        message:
-          type: string
-          title: Message
-        reference_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Reference Id
-      type: object
-      required:
-      - type
-      - message
-      title: ErrorResponseBodyErrorObjectInternalServer
-    ErrorResponseBodyErrorObjectInvalidRequest:
-      properties:
-        type:
-          type: string
-          const: invalid_request
-          title: Type
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - type
-      - message
-      title: ErrorResponseBodyErrorObjectInvalidRequest
-    ErrorResponseBodyInvalidAuthentication:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInvalidAuthentication'
-      type: object
-      required:
-      - error
-      title: ErrorResponseBodyInvalidAuthentication
   securitySchemes:
     HTTPBearer:
       type: http
