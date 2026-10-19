@@ -194,6 +194,16 @@ apis:
     url: lifecycle/databook-lifecycle.yml
   - type: AgenticAccess
     url: agentic-access/databook-agentic-access.yml
+- aid: databook:databook-asset-studio-api
+  name: Databook Asset Studio API
+  description: The asset_studio API from Databook — 6 operation(s) for asset_studio.
+  humanURL: https://api.databook.com/redoc
+  baseURL: https://api.databook.com
+  tags:
+  - asset_studio
+  properties:
+  - type: OpenAPI
+    url: openapi/databook-asset-studio-api-openapi.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

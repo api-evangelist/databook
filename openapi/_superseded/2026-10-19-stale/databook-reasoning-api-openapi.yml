@@ -1,0 +1,276 @@
+openapi: 3.2.0
+info:
+  title: DatabookAI REST Reasoning API
+  summary: Integrate DatabookAI's intelligence into your applications with a simple, reliable, and secure REST API.
+  description: '## Introduction
+
+    The DatabookAI REST API lets you integrate DatabookAI''s intelligence directly into your own applications and workflows.'
+  version: 0.6.0
+servers:
+- url: https://api.databook.com
+tags:
+- name: Reasoning
+  x-displayName: Reasoning
+paths:
+  /v1/reasoning:
+    post:
+      tags:
+      - Reasoning
+      summary: Run deep reasoning
+      description: Run deep reasoning with the given agent and parameters.
+      operationId: run_reasoning_v1_reasoning_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: databook-user-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Databook-User-Id
+      - name: databook-tenant-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Databook-Tenant-Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostReasoningRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostReasoningResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInvalidRequest'
+        '401':
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInvalidAuthentication'
+        '404':
+          description: Requested resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyRequestedResourceNotFound'
+        '429':
+          description: Rate limit reached
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyRateLimitReached'
+        '500':
+          description: Unexpected error on server side
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInternalServer'
+        '503':
+          description: Server side overload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyServerSideOverload'
+components:
+  schemas:
+    ErrorResponseBodyRateLimitReached:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectRateLimitReached'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyRateLimitReached
+    ErrorResponseBodyInvalidRequest:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInvalidRequest'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyInvalidRequest
+    ErrorResponseBodyInternalServer:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInternalServer'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyInternalServer
+    PostReasoningRequest:
+      properties:
+        agent_name:
+          type: string
+          title: Agent Name
+        parameters:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Parameters
+      type: object
+      required:
+      - agent_name
+      title: PostReasoningRequest
+    ErrorResponseBodyServerSideOverload:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectServerSideOverload'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyServerSideOverload
+    ErrorResponseBodyInvalidAuthentication:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInvalidAuthentication'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyInvalidAuthentication
+    ErrorResponseBodyErrorObjectServerSideOverload:
+      properties:
+        type:
+          type: string
+          const: server_side_overload_error
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectServerSideOverload
+    ErrorResponseBodyErrorObjectInternalServer:
+      properties:
+        type:
+          type: string
+          const: internal_server_error
+          title: Type
+        message:
+          type: string
+          title: Message
+        reference_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reference Id
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectInternalServer
+    ErrorResponseBodyErrorObjectRateLimitReached:
+      properties:
+        type:
+          type: string
+          const: rate_limit_error
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectRateLimitReached
+    ErrorResponseBodyErrorObjectInvalidRequest:
+      properties:
+        type:
+          type: string
+          const: invalid_request
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectInvalidRequest
+    ErrorResponseBodyErrorObjectRequestedResourceNotFound:
+      properties:
+        type:
+          type: string
+          const: resource_not_found_error
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectRequestedResourceNotFound
+    ErrorResponseBodyErrorObjectInvalidAuthentication:
+      properties:
+        type:
+          type: string
+          const: invalid_authentication_error
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectInvalidAuthentication
+    ErrorResponseBodyRequestedResourceNotFound:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectRequestedResourceNotFound'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyRequestedResourceNotFound
+    PostReasoningResponse:
+      properties:
+        response:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Response
+        reference_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reference Id
+        citations:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Citations
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      title: PostReasoningResponse
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

@@ -4,7 +4,136 @@ info:
   summary: Integrate DatabookAI's intelligence into your applications with a simple, reliable, and secure REST API.
   description: '## Introduction
 
-    The DatabookAI REST API lets you integrate DatabookAI''s intelligence directly into your own applications and workflows.'
+    The DatabookAI REST API lets you integrate DatabookAI''s intelligence directly into your own applications and workflows. Browse the available operations, grouped by resource, in the **Endpoints** section below.
+
+
+    The API uses standard HTTP methods, predictable resource-oriented URLs, and JSON-encoded request and response bodies. Every response, including errors, returns JSON.
+
+
+    ## Getting started
+
+    1. Obtain API access. Access is provisioned by Databook support, who issue the credentials your application uses to authenticate.
+
+    2. Send your first request. Include your access token in the `Authorization` header (see **Authentication**) and the required identity headers on every call.
+
+    3. Handle the response. Successful calls return a `2xx` status with a JSON body; failures return a JSON error object with a consistent shape (see **Errors**).
+
+
+    ### Prerequisites
+
+    - An active Databook account.
+
+    - API access provisioned by Databook support.
+
+
+    ## Authentication
+
+    All requests must be authenticated with a bearer token issued by Databook support. Pass the token in the `Authorization` header:
+
+
+    ```
+
+    Authorization: Bearer
+
+    ```
+
+
+    Requests must also include the following identity headers so the API can resolve the calling user and tenant:
+
+
+    | Header | Description |
+
+    | --- | --- |
+
+    | `databook-user-id` | Identifier of the user the request is made on behalf of. |
+
+    | `databook-tenant-id` | Identifier of the tenant (organization) the request belongs to. |
+
+
+    Requests that are missing or presenting an invalid token receive a `401 Invalid authentication` response. Tokens that lack the required permissions receive a `401` as well. Keep your token secret. Do not embed it in client-side code or commit it to source control.
+
+
+    ## Requests and responses
+
+    - All request and response bodies are JSON, except file uploads (for example, the batch job endpoint), which use `multipart/form-data`.
+
+    - Send `Content-Type: application/json` for endpoints that accept a JSON body.
+
+    - Timestamps are UTC and IDs are strings unless otherwise noted in the schema.
+
+
+    ## Errors
+
+    The API uses conventional HTTP status codes to indicate the outcome of a request. Codes in the `2xx` range indicate success, `4xx` codes indicate a problem with the request (for example, a missing parameter or invalid token), and `5xx` codes indicate an error on Databook''s side.
+
+
+    Every error response shares the same shape: an `error` object containing a machine-readable `type` and a human-readable `message`. Some responses also include a `reference_id` you can share with Databook support to help investigate the issue.
+
+
+    ```json
+
+    {
+
+    "error": {
+
+    "type": "invalid_request",
+
+    "message": "Invalid request"
+
+    },
+
+    "reference_id": "b1f2c3d4-..."
+
+    }
+
+    ```
+
+
+    | Status | Error type | Meaning |
+
+    | --- | --- | --- |
+
+    | `400` | `invalid_request` | The request was malformed or failed validation. |
+
+    | `401` | `invalid_authentication_error` | The access token is missing, invalid, or lacks the required permissions. |
+
+    | `404` | `resource_not_found_error` | The requested resource does not exist. |
+
+    | `429` | `rate_limit_error` | Too many requests. Slow down and retry after a short delay. |
+
+    | `500` | `internal_server_error` | An unexpected error occurred on Databook''s side. |
+
+    | `503` | `server_side_overload_error` | The service is temporarily overloaded or the request exceeded the time limit. Retry later. |
+
+
+    ## Rate limits
+
+    The API enforces rate limits to keep the service reliable for everyone. When you exceed a limit, requests return `429 rate_limit_error`. Build retries with exponential backoff into your integration to handle these responses gracefully.
+
+
+    ## Timeouts
+
+    The maximum duration for any single API call is 180 seconds. Requests that exceed this limit return a `503 server_side_overload_error`. For long-running workloads, prefer the batch endpoints, which process work asynchronously.
+
+
+    ## Legal
+
+    Privacy Policy
+
+
+    Terms and Conditions
+
+
+    API Terms
+
+
+    Security Trust Center
+
+
+    Databook
+
+
+    ## Endpoints'
   version: 0.6.0
 servers:
 - url: https://api.databook.com
@@ -230,62 +359,34 @@ paths:
                 $ref: '#/components/schemas/ErrorResponseBodyServerSideOverload'
 components:
   schemas:
-    ErrorResponseBodyRateLimitReached:
+    ErrorResponseBodyErrorObjectRequestedResourceNotFound:
       properties:
-        error:
-          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectRateLimitReached'
-      type: object
-      required:
-      - error
-      title: ErrorResponseBodyRateLimitReached
-    ErrorResponseBodyInvalidRequest:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInvalidRequest'
-      type: object
-      required:
-      - error
-      title: ErrorResponseBodyInvalidRequest
-    ErrorResponseBodyInternalServer:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInternalServer'
-      type: object
-      required:
-      - error
-      title: ErrorResponseBodyInternalServer
-    GetJobByIdResponse:
-      properties:
-        id:
+        type:
           type: string
-          title: Id
-        state:
+          const: resource_not_found_error
+          title: Type
+        message:
           type: string
-          title: State
-        stopped_reason:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Stopped Reason
-        created_at:
-          type: string
-          title: Created At
-        started_running_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Started Running At
-        stopped_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Stopped At
+          title: Message
       type: object
       required:
-      - id
-      - state
-      - created_at
-      title: GetJobByIdResponse
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectRequestedResourceNotFound
+    ErrorResponseBodyErrorObjectRateLimitReached:
+      properties:
+        type:
+          type: string
+          const: rate_limit_error
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectRateLimitReached
     GetJobResultByIdResponse:
       properties:
         job_id:
@@ -299,22 +400,14 @@ components:
       - job_id
       - job_result_s3_url
       title: GetJobResultByIdResponse
-    ErrorResponseBodyInvalidAuthentication:
+    ErrorResponseBodyRequestedResourceNotFound:
       properties:
         error:
-          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInvalidAuthentication'
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectRequestedResourceNotFound'
       type: object
       required:
       - error
-      title: ErrorResponseBodyInvalidAuthentication
-    ErrorResponseBodyServerSideOverload:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectServerSideOverload'
-      type: object
-      required:
-      - error
-      title: ErrorResponseBodyServerSideOverload
+      title: ErrorResponseBodyRequestedResourceNotFound
     ListJobResponse:
       properties:
         result:
@@ -326,6 +419,14 @@ components:
       required:
       - result
       title: ListJobResponse
+    ErrorResponseBodyServerSideOverload:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectServerSideOverload'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyServerSideOverload
     ErrorResponseBodyErrorObjectServerSideOverload:
       properties:
         type:
@@ -359,20 +460,6 @@ components:
       - type
       - message
       title: ErrorResponseBodyErrorObjectInternalServer
-    ErrorResponseBodyErrorObjectRateLimitReached:
-      properties:
-        type:
-          type: string
-          const: rate_limit_error
-          title: Type
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - type
-      - message
-      title: ErrorResponseBodyErrorObjectRateLimitReached
     ErrorResponseBodyErrorObjectInvalidRequest:
       properties:
         type:
@@ -387,20 +474,6 @@ components:
       - type
       - message
       title: ErrorResponseBodyErrorObjectInvalidRequest
-    ErrorResponseBodyErrorObjectRequestedResourceNotFound:
-      properties:
-        type:
-          type: string
-          const: resource_not_found_error
-          title: Type
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - type
-      - message
-      title: ErrorResponseBodyErrorObjectRequestedResourceNotFound
     ErrorResponseBodyErrorObjectInvalidAuthentication:
       properties:
         type:
@@ -415,14 +488,70 @@ components:
       - type
       - message
       title: ErrorResponseBodyErrorObjectInvalidAuthentication
-    ErrorResponseBodyRequestedResourceNotFound:
+    GetJobByIdResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        state:
+          type: string
+          title: State
+        stopped_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Stopped Reason
+        created_at:
+          type: string
+          title: Created At
+        started_running_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Started Running At
+        stopped_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Stopped At
+      type: object
+      required:
+      - id
+      - state
+      - created_at
+      title: GetJobByIdResponse
+    ErrorResponseBodyRateLimitReached:
       properties:
         error:
-          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectRequestedResourceNotFound'
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectRateLimitReached'
       type: object
       required:
       - error
-      title: ErrorResponseBodyRequestedResourceNotFound
+      title: ErrorResponseBodyRateLimitReached
+    ErrorResponseBodyInvalidAuthentication:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInvalidAuthentication'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyInvalidAuthentication
+    ErrorResponseBodyInvalidRequest:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInvalidRequest'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyInvalidRequest
+    ErrorResponseBodyInternalServer:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInternalServer'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyInternalServer
   securitySchemes:
     HTTPBearer:
       type: http

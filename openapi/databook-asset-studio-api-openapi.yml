@@ -1,0 +1,1005 @@
+openapi: 3.2.0
+info:
+  title: DatabookAI REST Asset Studio API
+  summary: Integrate DatabookAI's intelligence into your applications with a simple, reliable, and secure REST API.
+  description: '## Introduction
+
+    The DatabookAI REST API lets you integrate DatabookAI''s intelligence directly into your own applications and workflows. Browse the available operations, grouped by resource, in the **Endpoints** section below.
+
+
+    The API uses standard HTTP methods, predictable resource-oriented URLs, and JSON-encoded request and response bodies. Every response, including errors, returns JSON.
+
+
+    ## Getting started
+
+    1. Obtain API access. Access is provisioned by Databook support, who issue the credentials your application uses to authenticate.
+
+    2. Send your first request. Include your access token in the `Authorization` header (see **Authentication**) and the required identity headers on every call.
+
+    3. Handle the response. Successful calls return a `2xx` status with a JSON body; failures return a JSON error object with a consistent shape (see **Errors**).
+
+
+    ### Prerequisites
+
+    - An active Databook account.
+
+    - API access provisioned by Databook support.
+
+
+    ## Authentication
+
+    All requests must be authenticated with a bearer token issued by Databook support. Pass the token in the `Authorization` header:
+
+
+    ```
+
+    Authorization: Bearer
+
+    ```
+
+
+    Requests must also include the following identity headers so the API can resolve the calling user and tenant:
+
+
+    | Header | Description |
+
+    | --- | --- |
+
+    | `databook-user-id` | Identifier of the user the request is made on behalf of. |
+
+    | `databook-tenant-id` | Identifier of the tenant (organization) the request belongs to. |
+
+
+    Requests that are missing or presenting an invalid token receive a `401 Invalid authentication` response. Tokens that lack the required permissions receive a `401` as well. Keep your token secret. Do not embed it in client-side code or commit it to source control.
+
+
+    ## Requests and responses
+
+    - All request and response bodies are JSON, except file uploads (for example, the batch job endpoint), which use `multipart/form-data`.
+
+    - Send `Content-Type: application/json` for endpoints that accept a JSON body.
+
+    - Timestamps are UTC and IDs are strings unless otherwise noted in the schema.
+
+
+    ## Errors
+
+    The API uses conventional HTTP status codes to indicate the outcome of a request. Codes in the `2xx` range indicate success, `4xx` codes indicate a problem with the request (for example, a missing parameter or invalid token), and `5xx` codes indicate an error on Databook''s side.
+
+
+    Every error response shares the same shape: an `error` object containing a machine-readable `type` and a human-readable `message`. Some responses also include a `reference_id` you can share with Databook support to help investigate the issue.
+
+
+    ```json
+
+    {
+
+    "error": {
+
+    "type": "invalid_request",
+
+    "message": "Invalid request"
+
+    },
+
+    "reference_id": "b1f2c3d4-..."
+
+    }
+
+    ```
+
+
+    | Status | Error type | Meaning |
+
+    | --- | --- | --- |
+
+    | `400` | `invalid_request` | The request was malformed or failed validation. |
+
+    | `401` | `invalid_authentication_error` | The access token is missing, invalid, or lacks the required permissions. |
+
+    | `404` | `resource_not_found_error` | The requested resource does not exist. |
+
+    | `429` | `rate_limit_error` | Too many requests. Slow down and retry after a short delay. |
+
+    | `500` | `internal_server_error` | An unexpected error occurred on Databook''s side. |
+
+    | `503` | `server_side_overload_error` | The service is temporarily overloaded or the request exceeded the time limit. Retry later. |
+
+
+    ## Rate limits
+
+    The API enforces rate limits to keep the service reliable for everyone. When you exceed a limit, requests return `429 rate_limit_error`. Build retries with exponential backoff into your integration to handle these responses gracefully.
+
+
+    ## Timeouts
+
+    The maximum duration for any single API call is 180 seconds. Requests that exceed this limit return a `503 server_side_overload_error`. For long-running workloads, prefer the batch endpoints, which process work asynchronously.
+
+
+    ## Legal
+
+    Privacy Policy
+
+
+    Terms and Conditions
+
+
+    API Terms
+
+
+    Security Trust Center
+
+
+    Databook
+
+
+    ## Endpoints'
+  version: 0.6.0
+servers:
+- url: https://api.databook.com
+tags:
+- name: asset_studio
+  x-displayName: Media Assets
+paths:
+  /v1/asset/library:
+    get:
+      tags:
+      - asset_studio
+      summary: List library availalbe to the authenticated user
+      description: Lists all the assets available to generate
+      operationId: list_services_v1_asset_library_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: sort
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Sory by field
+          default: sortOrder
+          title: Sort
+        description: Sory by field
+      - name: limit
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Max number of items to return.
+          default: 99
+          title: Limit
+        description: Max number of items to return.
+      - name: databook-user-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Databook-User-Id
+      - name: databook-tenant-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Databook-Tenant-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LibraryListItem'
+                title: Response List Services V1 Asset Library Get
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInvalidRequest'
+        '401':
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInvalidAuthentication'
+        '404':
+          description: Requested resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyRequestedResourceNotFound'
+        '429':
+          description: Rate limit reached
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyRateLimitReached'
+        '500':
+          description: Unexpected error on server side
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInternalServer'
+        '503':
+          description: Server side overload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyServerSideOverload'
+  /v1/asset/generated:
+    get:
+      tags:
+      - asset_studio
+      summary: List generated assets
+      description: Lists asset requests for the authenticated user.
+      operationId: list_requests_v1_asset_generated_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          description: Page number of results.
+          default: 1
+          title: Page
+        description: Page number of results.
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          description: Max number of requests to return.
+          default: 10
+          title: Limit
+        description: Max number of requests to return.
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Sort as JSON, e.g. {"createdAt":"desc"}.
+          default: '{"createdAt":"desc"}'
+          title: Sort
+        description: Sort as JSON, e.g. {"createdAt":"desc"}.
+      - name: databook-user-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Databook-User-Id
+      - name: databook-tenant-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Databook-Tenant-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GeneratedAssetItem'
+                title: Response List Requests V1 Asset Generated Get
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInvalidRequest'
+        '401':
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInvalidAuthentication'
+        '404':
+          description: Requested resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyRequestedResourceNotFound'
+        '429':
+          description: Rate limit reached
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyRateLimitReached'
+        '500':
+          description: Unexpected error on server side
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInternalServer'
+        '503':
+          description: Server side overload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyServerSideOverload'
+  /v1/asset/generated/{asset_generation_id}:
+    get:
+      tags:
+      - asset_studio
+      summary: Get generated asset by it's generation id
+      description: Get a generated asset by it's generation id
+      operationId: get_generated_asset_v1_asset_generated__asset_generation_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: asset_generation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The ID of the generated asset
+          title: Asset Generation Id
+        description: The ID of the generated asset
+      - name: get_download_url
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Whether to get the download url for the generated asset. Default is false.
+          default: false
+          title: Get Download Url
+        description: Whether to get the download url for the generated asset. Default is false.
+      - name: databook-user-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Databook-User-Id
+      - name: databook-tenant-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Databook-Tenant-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneratedAssetItem'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInvalidRequest'
+        '401':
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInvalidAuthentication'
+        '404':
+          description: Requested resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyRequestedResourceNotFound'
+        '429':
+          description: Rate limit reached
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyRateLimitReached'
+        '500':
+          description: Unexpected error on server side
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInternalServer'
+        '503':
+          description: Server side overload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyServerSideOverload'
+  /v1/asset/generate:
+    post:
+      tags:
+      - asset_studio
+      summary: Generate asset
+      description: Creates an asset generation request for the authenticated user.
+      operationId: generate_asset_v1_asset_generate_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: library_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Library Id
+      - name: company_id
+        in: query
+        required: true
+        schema:
+          type: string
+          description: MongoDB ObjectId (24-character hex).
+          examples:
+          - '000000000000000000000000'
+          format: ObjectId
+          title: Company Id
+      - name: professional_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            description: MongoDB ObjectId (24-character hex).
+            examples:
+            - '000000000000000000000000'
+            format: ObjectId
+          - type: 'null'
+          title: Professional Id
+      - name: databook-user-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Databook-User-Id
+      - name: databook-tenant-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Databook-Tenant-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewAssetCreationResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInvalidRequest'
+        '401':
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInvalidAuthentication'
+        '404':
+          description: Requested resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyRequestedResourceNotFound'
+        '429':
+          description: Rate limit reached
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyRateLimitReached'
+        '500':
+          description: Unexpected error on server side
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInternalServer'
+        '503':
+          description: Server side overload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyServerSideOverload'
+  /v1/asset/companies/{company_id}/professionals:
+    get:
+      tags:
+      - asset_studio
+      summary: List professionals by company
+      description: Lists active, non-archived professionals for a company, including role information.
+      operationId: list_professionals_v1_asset_companies__company_id__professionals_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: company_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Company Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            minimum: 1
+          - type: 'null'
+          description: Max number of professionals to return.
+          default: 9999
+          title: Limit
+        description: Max number of professionals to return.
+      - name: databook-user-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Databook-User-Id
+      - name: databook-tenant-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Databook-Tenant-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProfessionalListItem'
+                title: Response List Professionals V1 Asset Companies  Company Id  Professionals Get
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInvalidRequest'
+        '401':
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInvalidAuthentication'
+        '404':
+          description: Requested resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyRequestedResourceNotFound'
+        '429':
+          description: Rate limit reached
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyRateLimitReached'
+        '500':
+          description: Unexpected error on server side
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInternalServer'
+        '503':
+          description: Server side overload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyServerSideOverload'
+  /v1/asset/companies:
+    get:
+      tags:
+      - asset_studio
+      summary: Search companies by name
+      description: Searches companies available for asset generation. Returns company id, name, logo, and nickname.
+      operationId: search_companies_v1_asset_companies_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: q
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Search query.
+          examples:
+          - acme
+          title: Q
+        description: Search query.
+      - name: databook-user-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Databook-User-Id
+      - name: databook-tenant-id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Databook-Tenant-Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TypesenseSearchResult'
+                title: Response Search Companies V1 Asset Companies Get
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInvalidRequest'
+        '401':
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInvalidAuthentication'
+        '404':
+          description: Requested resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyRequestedResourceNotFound'
+        '429':
+          description: Rate limit reached
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyRateLimitReached'
+        '500':
+          description: Unexpected error on server side
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyInternalServer'
+        '503':
+          description: Server side overload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBodyServerSideOverload'
+components:
+  schemas:
+    ErrorResponseBodyRateLimitReached:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectRateLimitReached'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyRateLimitReached
+    ErrorResponseBodyErrorObjectRateLimitReached:
+      properties:
+        type:
+          type: string
+          const: rate_limit_error
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectRateLimitReached
+    LibraryListItem:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        cta:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cta
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        level:
+          $ref: '#/components/schemas/LibraryLevel'
+      type: object
+      required:
+      - id
+      - name
+      - level
+      title: LibraryListItem
+    LibraryLevel:
+      type: string
+      enum:
+      - company
+      - professionals
+      title: LibraryLevel
+    ErrorResponseBodyErrorObjectServerSideOverload:
+      properties:
+        type:
+          type: string
+          const: server_side_overload_error
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectServerSideOverload
+    ErrorResponseBodyErrorObjectInvalidAuthentication:
+      properties:
+        type:
+          type: string
+          const: invalid_authentication_error
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectInvalidAuthentication
+    AssetGenerationStatus:
+      type: string
+      enum:
+      - pending
+      - limit exceeded
+      - in-progress
+      - completed
+      - cancelled
+      - error
+      title: AssetGenerationStatus
+    ErrorResponseBodyInvalidAuthentication:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInvalidAuthentication'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyInvalidAuthentication
+    NewAssetCreationResponse:
+      properties:
+        generation_id:
+          type: string
+          format: uuid
+          title: Generation Id
+        status:
+          $ref: '#/components/schemas/AssetGenerationStatus'
+      type: object
+      required:
+      - generation_id
+      - status
+      title: NewAssetCreationResponse
+    ErrorResponseBodyInvalidRequest:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInvalidRequest'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyInvalidRequest
+    ErrorResponseBodyInternalServer:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectInternalServer'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyInternalServer
+    ErrorResponseBodyErrorObjectRequestedResourceNotFound:
+      properties:
+        type:
+          type: string
+          const: resource_not_found_error
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectRequestedResourceNotFound
+    ErrorResponseBodyErrorObjectInternalServer:
+      properties:
+        type:
+          type: string
+          const: internal_server_error
+          title: Type
+        message:
+          type: string
+          title: Message
+        reference_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reference Id
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectInternalServer
+    GeneratedAssetCompany:
+      properties:
+        id:
+          type: string
+          format: ObjectId
+          title: Id
+          description: MongoDB ObjectId (24-character hex).
+          examples:
+          - '000000000000000000000000'
+        name:
+          type: string
+          title: Name
+        logo_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Logo Url
+      type: object
+      required:
+      - id
+      - name
+      title: GeneratedAssetCompany
+    ErrorResponseBodyRequestedResourceNotFound:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectRequestedResourceNotFound'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyRequestedResourceNotFound
+    GeneratedAssetItem:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        error:
+          anyOf:
+          - type: string
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Error
+        createdAt:
+          type: string
+          title: Createdat
+        updatedAt:
+          type: string
+          title: Updatedat
+        source_library_id:
+          type: string
+          title: Source Library Id
+        status_name:
+          $ref: '#/components/schemas/AssetGenerationStatus'
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        company:
+          anyOf:
+          - $ref: '#/components/schemas/GeneratedAssetCompany'
+          - type: 'null'
+        download_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Download Url
+      type: object
+      required:
+      - id
+      - createdAt
+      - updatedAt
+      - source_library_id
+      - status_name
+      title: GeneratedAssetItem
+    ProfessionalListItem:
+      properties:
+        id:
+          type: string
+          title: Id
+        fullName:
+          anyOf:
+          - type: string
+          - additionalProperties: true
+            type: object
+          title: Fullname
+        title:
+          type: string
+          title: Title
+      type: object
+      required:
+      - id
+      - fullName
+      - title
+      title: ProfessionalListItem
+    ErrorResponseBodyErrorObjectInvalidRequest:
+      properties:
+        type:
+          type: string
+          const: invalid_request
+          title: Type
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - type
+      - message
+      title: ErrorResponseBodyErrorObjectInvalidRequest
+    ErrorResponseBodyServerSideOverload:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponseBodyErrorObjectServerSideOverload'
+      type: object
+      required:
+      - error
+      title: ErrorResponseBodyServerSideOverload
+    TypesenseSearchResult:
+      properties:
+        id:
+          type: string
+          title: Id
+        company_name:
+          type: string
+          title: Company Name
+        logo_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Logo Url
+        nickname:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Nickname
+      type: object
+      required:
+      - id
+      - company_name
+      title: TypesenseSearchResult
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

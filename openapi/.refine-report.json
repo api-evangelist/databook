@@ -1,9 +1,10 @@
 {
   "provider": "databook",
   "sources": [
-    "_original/databook-openapi-original.json"
+    "_original/databook-openapi.json"
   ],
   "outputs": [
+    "databook-asset-studio-api-openapi.yml",
     "databook-batch-create-api-openapi.yml",
     "databook-batch-query-api-openapi.yml",
     "databook-chat-api-openapi.yml",
@@ -14,13 +15,8 @@
   "warnings": [],
   "notes": [
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
-    "databook-openapi-original.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "apis.yml register: already-registered"
+    "databook-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: written (+1 apis, 5 total)"
   ],
-  "skipped": [
-    "databook-batch-create-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "databook-batch-query-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "databook-chat-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "databook-reasoning-api-openapi.yml: previously refined output, superseded by openapi/_original/"
-  ]
+  "skipped": []
 }
