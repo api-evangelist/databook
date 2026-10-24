@@ -199,7 +199,8 @@ apis:
   description: The asset_studio API from Databook — 6 operation(s) for asset_studio.
   humanURL: https://api.databook.com/redoc
   baseURL: https://api.databook.com
-  tags:
+  tags: []
+  tags_raw:
   - asset_studio
   properties:
   - type: OpenAPI
