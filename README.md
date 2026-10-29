@@ -64,6 +64,123 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Databook is a company surfaced as a portfolio company of bessemer-venture-partners, threshold-ventures and added to the API Evangelist network as a stub for enrichment. Sector: vertical-software. This profile is a lead awaiting the enrichment pipeline.
+Databook is an AI-powered decision system for enterprise sales teams, combining verified market intelligence with structured reasoning to give sellers visibility into their largest deals. The platform pairs an "Outside-In Radar" of signals beyond the CRM with an advanced reasoning engine, a dynamic Customer Context Graph modeling every buying group, guided sales agents tuned to specific KPIs, a CRO dashboard for leadership, and a Value Coach for executive narratives. It serves enterprise revenue organizations across cloud, cybersecurity, managed services, and software. Databook is a portfolio company of Bessemer Venture Partners and Threshold Ventures. It publishes a machine-readable REST API — the DatabookAI REST API, OpenAPI 3.1.0 at https://api.databook.com/openapi.json — exposing a catalog of 66 account-research insights, asynchronous CSV batch jobs that run those insights across many target accounts, a threaded chat endpoint, and a deep-reasoning endpoint that returns cited, structured analysis. Access is not self-serve: bearer tokens are provisioned by Databook support.
 
-Backed by: bessemer-venture-partners, threshold-ventures — https://trydatabook.com/
+**Areas:** Company · Vertical Software · Sales Intelligence · Account Intelligence · Sales Enablement · Enterprise Sales · Artificial Intelligence · Revenue Operations · REST API · OpenAPI · Batch Processing · Agents
+
+## Databook on APIs.io
+
+Everything profiled for Databook is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/databook/](https://apis.io/providers/databook/)** — or go straight to one of the APIs or properties below.
+
+### APIs (4)
+
+- [Databook batch - create API](https://apis.io/apis/databook/databook-batch-create-api/) — The batch - create API from Databook — 3 operation(s) for batch - create.
+- [Databook batch - query API](https://apis.io/apis/databook/databook-batch-query-api/) — The batch - query API from Databook — 3 operation(s) for batch - query.
+- [Databook Chat API](https://apis.io/apis/databook/databook-chat-api/) — The chat API from Databook — 1 operation(s) for chat.
+- [Databook Reasoning API](https://apis.io/apis/databook/databook-reasoning-api/) — The reasoning API from Databook — 1 operation(s) for reasoning.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Databook Agentic Access](https://apis.io/agentic-access/databook/databook-agentic-access/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Databook Openapi Overlay](https://apis.io/overlays/databook/databook-openapi-overlay/)
+
+#### Security (4)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Databook Authentication](https://apis.io/security/databook/databook-authentication/)
+- [Databook Domain Security](https://apis.io/security/databook/databook-domain-security/)
+- [Databook Trust Center](https://apis.io/security/databook/databook-trust-center/)
+- [Databook Vulnerability Disclosure](https://apis.io/security/databook/databook-vulnerability-disclosure/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Databook Plans Pricing](https://apis.io/plans/databook/databook-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Databook Rate Limits](https://apis.io/rate-limits/databook/databook-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://databook.com/)
+- [Documentation](https://api.databook.com/redoc)
+- [Getting started](https://api.databook.com/redoc#section/Getting-started)
+- [API reference](https://api.databook.com/redoc)
+- [Support](https://databook.com/contact)
+- [Blog](https://databook.com/resources)
+- [Security](https://databook.com/security)
+- [Compliance](https://databook.com/security)
+- [Trust centre](https://trust.databook.com/)
+- [Terms of service](https://databook.com/terms)
+- [Privacy policy](https://databook.com/privacy)
+
+## API Evangelist rating
+
+**Kin Score 35.9** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 49.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 0.0 |
+| Developer ergonomics | 51.8 |
+| Access clarity | 14.5 |
+
+**Agent readiness 26.4** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 25.5** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/databook/](https://apis.io/providers/databook/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Databook: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/databook/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
